@@ -2,9 +2,12 @@ package kr.ac.tukorea.sgp2022.imageswitcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,19 +22,25 @@ public class MainActivity extends AppCompatActivity
             R.mipmap.card_4,
             R.mipmap.card_5,
     };
+
     private int pageNumber;
     private TextView pageTextView;
     private ImageView contentImageView;
+    private ImageButton btnPrev, btnNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
+
         pageTextView = findViewById(R.id.pageTextView);
         contentImageView = findViewById(R.id.contentImageView);
-
-
+        btnPrev = findViewById(R.id.btnPrev);
+        btnNext = findViewById(R.id.btnNext);
         SetPage(1);
     }
 
@@ -51,8 +60,19 @@ public class MainActivity extends AppCompatActivity
 
     private void SetPage(int page)
     {
-        if (page < 1 || page > 5)
-            return;
+        if (page <= 1)
+        {
+            btnPrev.setEnabled(false);
+            btnNext.setEnabled(true);
+        } else if (page >= 5)
+        {
+            btnPrev.setEnabled(true);
+            btnNext.setEnabled(false);
+        } else
+        {
+            btnPrev.setEnabled(true);
+            btnNext.setEnabled(true);
+        }
 
         pageNumber = page;
         String text = page + " / " + 5;

@@ -12,10 +12,11 @@
         android:layout_height = "wrap_content">
 
         <ImageButton
+            android:id="@+id/btnPrev"
             android:layout_width = "50dp"
             android:layout_height = "50dp"
             android:scaleType="fitCenter"
-            android:src="@mipmap/prev"
+            android:background="@drawable/sel_prev"
             android:onClick = "OnBtnPrev"/>
 
         <TextView
@@ -29,10 +30,11 @@
             android:textSize = "20sp" />
 
         <ImageButton
+            android:id="@+id/btnNext"
             android:layout_width = "50dp"
             android:layout_height = "50dp"
             android:scaleType="fitCenter"
-            android:src="@mipmap/next"
+            android:background="@drawable/sel_next"
             android:onClick = "OnBtnNext" />
 
     </LinearLayout>
