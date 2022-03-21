@@ -1,7 +1,10 @@
 package kr.ac.tukorea.sgp2022.cards;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -59,6 +62,25 @@ public class MainActivity extends AppCompatActivity
     public void onBtnRestart(View view)
     {
         Log.d(TAG, "onBtnRestart");
+        askRetry();
+    }
+
+    private void askRetry()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Restart")
+                .setMessage("Do you really want to restart the game")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        startGame();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .create()
+                .show();
     }
 
     public void onBtnCard(View view)
@@ -76,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         int prevResId = 0;
         if (previousButton != null)
         {
-            prevResId = (Integer)previousButton.getTag();
+            prevResId = (Integer) previousButton.getTag();
         }
 
         int resId = (Integer) imageButton.getTag();
@@ -90,8 +112,7 @@ public class MainActivity extends AppCompatActivity
 
             previousButton = imageButton;
             setScore(flips + 1);
-        }
-        else
+        } else
         {
             imageButton.setVisibility(View.INVISIBLE);
             previousButton.setVisibility(View.INVISIBLE);
