@@ -25,7 +25,7 @@
             android:layout_height = "wrap_content"
             android:onClick = "onBtnRestart"
             android:layout_weight="0"
-            android:text = "Restart"
+            android:text = "@string/restart"
             android:textSize = "18dp" />
     </LinearLayout>
 
