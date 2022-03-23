@@ -10,11 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ListIterator;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         if (imageButton == previousButton)
         {
             Log.d(TAG, "Same Button");
+            Toast.makeText(this, "You pressed same button!", Toast.LENGTH_SHORT).show();
             return;
         }
 
