@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements TextWatcher {
         nameEdit = findViewById(R.id.nameEdit);
 
         nameEdit.addTextChangedListener(this);
-        });
     }
 
     public void onCheckBox(View view) {
