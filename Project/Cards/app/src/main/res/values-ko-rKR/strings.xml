@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name = "app_name">종이자루 놀이</string>
+    <string name="restart">다시하리다</string>
+    <string name="restart_alert_msg">다시하겠소?</string>
+    <string name="yes">그러하리다</string>
+    <string name="no">안하겠소</string>
+    <string name="same_card_toast">같은 종이자루를 집었구려</string>
+    <string name="flips_fmt">뒤집은 종이자루: %d</string>
+</resources>
