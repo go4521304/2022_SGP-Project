@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private ImageButton previousButton;
     private int flips;
     private TextView scoreTextView;
+    private int countFlips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity
             btn.setVisibility(View.VISIBLE);
             btn.setImageResource(R.mipmap.card_blue_back);
         }
+        countFlips = 0;
         setScore(0);
     }
 
@@ -134,10 +136,15 @@ public class MainActivity extends AppCompatActivity
             imageButton.setVisibility(View.INVISIBLE);
             previousButton.setVisibility(View.INVISIBLE);
 
+            countFlips += 2;
+
             previousButton = null;
         }
 
-
+        if (countFlips == BUTTON_IDS.length)
+        {
+            askRetry();
+        }
     }
 
     private void setScore(int flips)
