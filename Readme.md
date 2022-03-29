@@ -1,10 +1,9 @@
-# <div align = center>📱 2022-SGP-Project 🎮</div>
+# <div align = center>📱 [Project] Nerver Ending Jump 🎮</div>
+#### <div align = center> 2022-SGP / 스마트폰 게임 프로그래밍 </div>
 <div align = center><img src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=Android&logoColor=white"/> <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/> 
 <img src="https://img.shields.io/badge/Android Studio-3DDC84?style=flat-square&logo=Android Studio&logoColor=white"/> <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=Git&logoColor=white"/> <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></div>
 </br>
 
-<b><div align = center><span style="font-size:200%"> [Project] Nerver Ending Jump </span></div></b>
-</br>
 
 ## 📄 목차
 ### 1. [게임 설명](#1-게임-설명-1)
