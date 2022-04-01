@@ -9,12 +9,13 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Choreographer;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
 
-public class GameView extends View
+public class GameView extends View implements Choreographer.FrameCallback
 {
     private static final String TAG = GameView.class.getSimpleName();
     private Bitmap soccerBitmap;
@@ -39,21 +40,15 @@ public class GameView extends View
         ballDx = 10;
         ballDy = 10;
 
-        updateFrame();
+        Choreographer.getInstance().postFrameCallback(this);
     }
 
-    private void updateFrame()
+    @Override
+    public void doFrame(long l)
     {
         update();
         invalidate();
-        post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                updateFrame();
-            }
-        });
+        Choreographer.getInstance().postFrameCallback(this);
     }
 
     private void update()
