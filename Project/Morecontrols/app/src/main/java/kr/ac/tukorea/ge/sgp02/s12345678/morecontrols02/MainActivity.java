@@ -1,4 +1,4 @@
-package kr.ac.tukorea.morecontrols;
+package kr.ac.tukorea.ge.sgp02.s12345678.morecontrols02;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,24 +18,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView outputTextView;
     private EditText nameEdit;
 
-    private TextWatcher nameWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            Log.v(TAG, "before");
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            Log.v(TAG, "textChanges: " + charSequence);
-            outputTextView.setText("Text Length: " + charSequence.length());
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            Log.v(TAG, "after");
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +26,12 @@ public class MainActivity extends AppCompatActivity {
         outputTextView = findViewById(R.id.outputTextView);
         nameEdit = findViewById(R.id.nameEdit);
 
-        nameEdit.addTextChangedListener(nameWatcher);
+        nameEdit.addTextChangedListener(nameWathcer);
     }
 
-    public void onCheckBox(View view) {
+    public void onCheckbox(View view) {
         CheckBox cb = (CheckBox) view;
-        Log.d(TAG, "CheckBox state: " + cb.isChecked());
+        Log.d(TAG, "Checkbox state: " + cb.isChecked());
     }
 
     public void onBtnDoIt(View view) {
@@ -57,4 +39,22 @@ public class MainActivity extends AppCompatActivity {
         String text = nameEdit.getText().toString();
         outputTextView.setText(text);
     }
+
+    private TextWatcher nameWathcer = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.v(TAG, "before");
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "textChange: " + charSequence);
+            outputTextView.setText("Text Length: " + charSequence.length());
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            Log.v(TAG, "after");
+        }
+    };
 }

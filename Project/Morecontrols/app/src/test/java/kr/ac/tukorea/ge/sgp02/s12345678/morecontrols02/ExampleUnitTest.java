@@ -1,4 +1,4 @@
-package kr.ac.tukorea.morecontrols;
+package kr.ac.tukorea.ge.sgp02.s12345678.morecontrols02;
 
 import org.junit.Test;
 

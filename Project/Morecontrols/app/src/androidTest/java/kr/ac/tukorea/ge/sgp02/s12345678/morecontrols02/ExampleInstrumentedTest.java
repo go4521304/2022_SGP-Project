@@ -1,4 +1,4 @@
-package kr.ac.tukorea.morecontrols;
+package kr.ac.tukorea.ge.sgp02.s12345678.morecontrols02;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("kr.ac.tukorea.morecontrols", appContext.getPackageName());
+        assertEquals("kr.ac.tukorea.ge.sgp02.s12345678.morecontrols02", appContext.getPackageName());
     }
 }
