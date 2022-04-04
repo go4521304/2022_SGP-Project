@@ -12,7 +12,9 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Choreographer;
+import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.annotation.Nullable;
 
 import java.lang.reflect.Array;
@@ -43,10 +45,10 @@ public class GameView extends View implements Choreographer.FrameCallback
         view = this;
 
         Random random = new Random();
-        for (int i = 0; i<BALL_COUNT; ++i)
+        for (int i = 0; i < BALL_COUNT; ++i)
         {
-            int dx = random.nextInt(10)+5;
-            int dy = random.nextInt(10)+5;
+            int dx = random.nextInt(10) + 5;
+            int dy = random.nextInt(10) + 5;
             Ball ball = new Ball(dx, dy);
             balls.add(ball);
         }
@@ -63,7 +65,7 @@ public class GameView extends View implements Choreographer.FrameCallback
     public void doFrame(long currentTimenanos)
     {
         long now = currentTimenanos;
-        int elpased = (int)(now - previousTimeMillis);
+        int elpased = (int) (now - previousTimeMillis);
         if (elpased != 0)
         {
             framesPerSecond = 1_000_000_000 / elpased;
@@ -89,5 +91,21 @@ public class GameView extends View implements Choreographer.FrameCallback
         }
         fighter.draw(canvas);
         canvas.drawText("FPS: " + framesPerSecond, 100, 100, fpsPaint);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        int action = event.getAction();
+
+        switch(action){
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                fighter.setPosition(x,y);
+                return true;
+        }
+        return super.onTouchEvent(event);
     }
 }

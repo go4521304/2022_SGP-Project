@@ -32,4 +32,11 @@ public class Fighter
     {
         canvas .drawBitmap(bitmap, srcRest, dstRect, null);
     }
+
+    public void setPosition(int x, int y)
+    {
+        int radius = dstRect.width()/2;
+        dstRect.set(x - radius, y - radius,
+                x + radius, y + radius);
+    }
 }
