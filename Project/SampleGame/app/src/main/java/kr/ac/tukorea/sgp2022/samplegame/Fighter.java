@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-public class Fighter
+public class Fighter implements GameObject
 {
     private static Bitmap bitmap;
     private static Rect srcRest = new Rect();
@@ -23,14 +23,17 @@ public class Fighter
         }
     }
 
+    @Override
     public void update()
     {
 
     }
 
+    @Override
     public void draw(Canvas canvas)
     {
         canvas .drawBitmap(bitmap, srcRest, dstRect, null);
+
     }
 
     public void setPosition(int x, int y)

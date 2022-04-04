@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-public class Ball
+public class Ball implements GameObject
 {
     private static Bitmap bitmap;
     private static Rect srcRest = new Rect();
@@ -27,6 +27,7 @@ public class Ball
         }
     }
 
+    @Override
     public void update()
     {
         dstRect.offset(dx, dy);
@@ -58,7 +59,8 @@ public class Ball
             }
         }
     }
-
+    
+    @Override
     public void draw(Canvas canvas)
     {
         canvas.drawBitmap(bitmap, srcRest, dstRect, null);

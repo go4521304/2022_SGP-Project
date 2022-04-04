@@ -29,7 +29,8 @@ public class GameView extends View implements Choreographer.FrameCallback
     private long previousTimeMillis;
     private int framesPerSecond;
     private Paint fpsPaint = new Paint();
-    private ArrayList<Ball> balls = new ArrayList<>();
+
+    private ArrayList<GameObject> objects = new ArrayList<>();
     private Fighter fighter;
 
     public static GameView view;
@@ -50,13 +51,14 @@ public class GameView extends View implements Choreographer.FrameCallback
             int dx = random.nextInt(10) + 5;
             int dy = random.nextInt(10) + 5;
             Ball ball = new Ball(dx, dy);
-            balls.add(ball);
+            objects.add(ball);
         }
 
         fpsPaint.setColor(Color.BLUE);
         fpsPaint.setTextSize(70);
 
         fighter = new Fighter();
+        objects.add(fighter);
 
         Choreographer.getInstance().postFrameCallback(this);
     }
@@ -78,18 +80,16 @@ public class GameView extends View implements Choreographer.FrameCallback
 
     private void update()
     {
-        balls.forEach(Ball::update);
-        //fighter.update();
+        objects.forEach(GameObject::update);
     }
 
     @Override
     protected void onDraw(Canvas canvas)
     {
-        for (Ball ball : balls)
+        for (GameObject object : objects)
         {
-            ball.draw(canvas);
+            object.draw(canvas);
         }
-        fighter.draw(canvas);
         canvas.drawText("FPS: " + framesPerSecond, 100, 100, fpsPaint);
     }
 
