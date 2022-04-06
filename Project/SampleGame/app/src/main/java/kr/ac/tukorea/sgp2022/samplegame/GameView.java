@@ -25,40 +25,45 @@ import java.util.Random;
 public class GameView extends View implements Choreographer.FrameCallback
 {
     private static final String TAG = GameView.class.getSimpleName();
-    private static final int BALL_COUNT = 10;
+
     private long previousTimeMillis;
     private int framesPerSecond;
     private Paint fpsPaint = new Paint();
 
-    private ArrayList<GameObject> objects = new ArrayList<>();
-    private Fighter fighter;
 
     public static GameView view;
+    private boolean iniitialized;
 
     public GameView(Context context, @Nullable AttributeSet attrs)
     {
         super(context, attrs);
-        initView();
+        //initView();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh)
+    {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        Metrics.width = w;
+        Metrics.height = h;
+
+        if (!iniitialized)
+        {
+            initView();
+            iniitialized = true;
+        }
     }
 
     private void initView()
     {
         view = this;
 
-        Random random = new Random();
-        for (int i = 0; i < BALL_COUNT; ++i)
-        {
-            int dx = random.nextInt(10) + 5;
-            int dy = random.nextInt(10) + 5;
-            Ball ball = new Ball(dx, dy);
-            objects.add(ball);
-        }
+        MainGame game = MainGame.getInstance();
+        game.init();
 
         fpsPaint.setColor(Color.BLUE);
         fpsPaint.setTextSize(70);
-
-        fighter = new Fighter();
-        objects.add(fighter);
 
         Choreographer.getInstance().postFrameCallback(this);
     }
@@ -67,45 +72,29 @@ public class GameView extends View implements Choreographer.FrameCallback
     public void doFrame(long currentTimenanos)
     {
         long now = currentTimenanos;
-        int elpased = (int) (now - previousTimeMillis);
-        if (elpased != 0)
+        int elapsed = (int) (now - previousTimeMillis);
+        if (elapsed != 0)
         {
-            framesPerSecond = 1_000_000_000 / elpased;
+            framesPerSecond = 1_000_000_000 / elapsed;
             previousTimeMillis = now;
-            update();
+            MainGame.getInstance().update(elapsed);
             invalidate();
         }
         Choreographer.getInstance().postFrameCallback(this);
     }
 
-    private void update()
-    {
-        objects.forEach(GameObject::update);
-    }
 
     @Override
     protected void onDraw(Canvas canvas)
     {
-        for (GameObject object : objects)
-        {
-            object.draw(canvas);
-        }
+        MainGame.getInstance().draw(canvas);
+
         canvas.drawText("FPS: " + framesPerSecond, 100, 100, fpsPaint);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        int action = event.getAction();
-
-        switch(action){
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                fighter.setPosition(x,y);
-                return true;
-        }
-        return super.onTouchEvent(event);
+        return MainGame.getInstance().onTouchEvent(event);
     }
 }
