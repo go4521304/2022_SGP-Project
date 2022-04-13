@@ -50,9 +50,8 @@ public class Bullet implements GameObject, BoxCollidable
     }
 
     @Override
-    public RectF getBoundingRect()
-    {
+    public RectF getBoundingRect() {
         float hw = laserWidth / 2;
-        return new RectF(x-hw, y, y+hw, y-length);
+        return new RectF(x - hw, y, x + hw, y - length);
     }
 }
