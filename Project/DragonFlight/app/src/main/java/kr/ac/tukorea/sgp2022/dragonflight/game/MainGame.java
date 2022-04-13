@@ -87,4 +87,9 @@ public class MainGame {
             }
         });
     }
+
+    public int objectCount()
+    {
+        return objects.size();
+    }
 }
