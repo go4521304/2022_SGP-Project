@@ -1,10 +1,14 @@
-package kr.ac.tukorea.sgp2022.dragonflight;
+package kr.ac.tukorea.sgp2022.dragonflight.game;
 
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
-import java.util.Random;
+
+import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
+import kr.ac.tukorea.sgp2022.dragonflight.R;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.GameObject;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.GameView;
 
 public class MainGame {
     public static MainGame getInstance() {

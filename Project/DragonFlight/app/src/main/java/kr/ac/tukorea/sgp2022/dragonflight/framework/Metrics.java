@@ -1,8 +1,9 @@
-package kr.ac.tukorea.sgp2022.dragonflight;
+package kr.ac.tukorea.sgp2022.dragonflight.framework;
 
 import android.content.res.Resources;
-import android.os.Build;
 import android.util.TypedValue;
+
+import kr.ac.tukorea.sgp2022.dragonflight.framework.GameView;
 
 public class Metrics {
     public static int width;

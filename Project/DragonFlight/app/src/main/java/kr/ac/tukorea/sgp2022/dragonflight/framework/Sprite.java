@@ -1,10 +1,15 @@
-package kr.ac.tukorea.sgp2022.dragonflight;
+package kr.ac.tukorea.sgp2022.dragonflight.framework;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-public class Sprite implements GameObject {
+import kr.ac.tukorea.sgp2022.dragonflight.framework.BitmapPool;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.GameObject;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
+
+public class Sprite implements GameObject
+{
     protected Bitmap bitmap;
     protected RectF dstRect = new RectF();
     protected float x, y, radius;

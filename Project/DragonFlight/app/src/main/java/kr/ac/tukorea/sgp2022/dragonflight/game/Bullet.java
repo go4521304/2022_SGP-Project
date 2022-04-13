@@ -1,10 +1,15 @@
-package kr.ac.tukorea.sgp2022.dragonflight;
+package kr.ac.tukorea.sgp2022.dragonflight.game;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class Bullet implements GameObject {
+import kr.ac.tukorea.sgp2022.dragonflight.framework.GameObject;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
+import kr.ac.tukorea.sgp2022.dragonflight.R;
+
+public class Bullet implements GameObject
+{
     protected float x, y;
     protected final float length;
     protected final float dy;

@@ -1,8 +1,10 @@
-package kr.ac.tukorea.sgp2022.dragonflight;
+package kr.ac.tukorea.sgp2022.dragonflight.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import kr.ac.tukorea.sgp2022.dragonflight.R;
 
 public class MainActivity extends AppCompatActivity {
 

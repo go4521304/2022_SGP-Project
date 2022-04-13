@@ -1,10 +1,16 @@
-package kr.ac.tukorea.sgp2022.dragonflight;
+package kr.ac.tukorea.sgp2022.dragonflight.game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-public class Fighter extends Sprite {
+import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
+import kr.ac.tukorea.sgp2022.dragonflight.R;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.Sprite;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.BitmapPool;
+
+public class Fighter extends Sprite
+{
 
     private static final String TAG = Fighter.class.getSimpleName();
     private Bitmap targetBitmap;
