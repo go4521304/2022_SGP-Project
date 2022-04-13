@@ -1,16 +1,20 @@
 package kr.ac.tukorea.sgp2022.dragonflight.game;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
+import kr.ac.tukorea.sgp2022.dragonflight.framework.CollisionHelper;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
 import kr.ac.tukorea.sgp2022.dragonflight.R;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.GameObject;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.GameView;
 
 public class MainGame {
+    private static final String TAG = MainGame.class.getSimpleName();
+
     public static MainGame getInstance() {
         if (singleton == null) {
             singleton = new MainGame();
@@ -48,7 +52,34 @@ public class MainGame {
         frameTime = elapsedNanos * 1e-9f; // 1_000_000_000.0f;
         for (GameObject gobj : objects) {
             gobj.update();
-        } // 04/11 루프중에 오브젝트 삭제하는 명령떄문에 오류
+        }
+
+        checkCollision();
+    }
+
+    private void checkCollision()
+    {
+        for (GameObject o1 : objects)
+        {
+            if (!(o1 instanceof Enemy))
+            {
+                continue;
+            }
+            Enemy enemy = (Enemy) o1;
+            for (GameObject o2 : objects)
+            {
+                if (!(o2 instanceof Bullet))
+                {
+                    continue;
+                }
+                Bullet bullet = (Bullet) o2;
+
+                if (CollisionHelper.collides(enemy, bullet))
+                {
+                    Log.d(TAG, "Collision !!");
+                }
+            }
+        }
     }
 
     public void draw(Canvas canvas) {

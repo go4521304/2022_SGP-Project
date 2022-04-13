@@ -1,10 +1,15 @@
 package kr.ac.tukorea.sgp2022.dragonflight.game;
 
+import android.graphics.Rect;
+import android.graphics.RectF;
+
 import kr.ac.tukorea.sgp2022.dragonflight.R;
+import kr.ac.tukorea.sgp2022.dragonflight.framework.BoxCollidable;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.Sprite;
 
-public class Enemy extends Sprite {
+public class Enemy extends Sprite implements BoxCollidable
+{
     private static float size;
     protected float dy;
     public Enemy(float x, float y, float speed) {
@@ -26,5 +31,11 @@ public class Enemy extends Sprite {
         if (dstRect.top > Metrics.height) {
             MainGame.getInstance().remove(this);
         }
+    }
+
+    @Override
+    public RectF getBoundingRect()
+    {
+        return dstRect;
     }
 }
