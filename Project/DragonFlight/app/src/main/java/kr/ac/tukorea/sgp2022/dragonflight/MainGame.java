@@ -46,7 +46,7 @@ public class MainGame {
         frameTime = elapsedNanos * 1e-9f; // 1_000_000_000.0f;
         for (GameObject gobj : objects) {
             gobj.update();
-        }
+        } // 04/11 루프중에 오브젝트 삭제하는 명령떄문에 오류
     }
 
     public void draw(Canvas canvas) {
@@ -63,16 +63,22 @@ public class MainGame {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
                 fighter.setTargetPosition(x, y);
-                if (action == MotionEvent.ACTION_DOWN) {
-                    fighter.fire();
-                }
+
                 return true;
         }
         return false;
     }
 
-    public void add(GameObject gameObject) {
-        objects.add(gameObject);
+    public void add(GameObject gameObject)
+    {
+        GameView.view.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                objects.add(gameObject);
+            }
+        });
     }
 
     public void remove(GameObject gameObject)
