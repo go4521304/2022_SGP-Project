@@ -97,11 +97,11 @@ public class MainGame {
     public void draw(Canvas canvas) {
         for (GameObject gobj : objects) {
             gobj.draw(canvas);
-            if (gobj instanceof BoxCollidable)
-            {
-                RectF rect = ((BoxCollidable) gobj).getBoundingRect();
-                canvas.drawRect(rect, collisionPaint);
-            }
+//            if (gobj instanceof BoxCollidable)
+//            {
+//                RectF rect = ((BoxCollidable) gobj).getBoundingRect();
+//                canvas.drawRect(rect, collisionPaint);
+//            }
         }
     }
 

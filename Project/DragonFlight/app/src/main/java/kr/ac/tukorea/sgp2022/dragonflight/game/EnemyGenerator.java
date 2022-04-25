@@ -2,6 +2,8 @@ package kr.ac.tukorea.sgp2022.dragonflight.game;
 
 import android.graphics.Canvas;
 
+import java.util.Random;
+
 import kr.ac.tukorea.sgp2022.dragonflight.R;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.GameObject;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
@@ -12,6 +14,7 @@ public class EnemyGenerator implements GameObject
     private final float spawnInterval;
     private final float fallSpeed;
     private float elapsedTime;
+    private int wave;
 
     public EnemyGenerator()
     {
@@ -36,11 +39,17 @@ public class EnemyGenerator implements GameObject
 
     private void spawn()
     {
+        wave++;
+        Random rand = new Random();
         float tenth = Metrics.width / 10;
         for (int i = 1; i <= 9; i+=2)
         {
             float x = i * tenth;
-            Enemy enemy = new Enemy(x, 0, fallSpeed);
+            int level = (wave + 15) / 10 - rand.nextInt(3);
+            if (level < Enemy.MIN_LEVEL) level = Enemy.MIN_LEVEL;
+            if (level > Enemy.MAX_LEVEL) level = Enemy.MAX_LEVEL;
+            //int level = rand.nextInt(Enemy.MAX_LEVEL) + 1;
+            Enemy enemy = new Enemy(level, x, fallSpeed);
             MainGame.getInstance().add(enemy);
         }
 
