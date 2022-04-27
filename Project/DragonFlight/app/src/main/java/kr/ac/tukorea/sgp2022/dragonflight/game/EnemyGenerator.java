@@ -49,8 +49,8 @@ public class EnemyGenerator implements GameObject
             if (level < Enemy.MIN_LEVEL) level = Enemy.MIN_LEVEL;
             if (level > Enemy.MAX_LEVEL) level = Enemy.MAX_LEVEL;
             //int level = rand.nextInt(Enemy.MAX_LEVEL) + 1;
-            Enemy enemy = new Enemy(level, x, fallSpeed);
-            MainGame.getInstance().add(enemy);
+            Enemy enemy = Enemy.get(level, x, fallSpeed);
+            MainGame.getInstance().add(MainGame.Layer.enemy, enemy);
         }
 
     }
