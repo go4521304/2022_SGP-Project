@@ -1,8 +1,10 @@
-package kr.ac.tukorea.sgp22.nerverendingjump;
+package kr.ac.tukorea.sgp22.nerverendingjump.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import kr.ac.tukorea.sgp22.nerverendingjump.R;
 
 public class MainActivity extends AppCompatActivity {
 
