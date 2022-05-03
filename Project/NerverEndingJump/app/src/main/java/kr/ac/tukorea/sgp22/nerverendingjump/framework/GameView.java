@@ -12,6 +12,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import kr.ac.tukorea.sgp22.nerverendingjump.game.MainGame;
+
 public class GameView extends View implements Choreographer.FrameCallback
 {
     private static final String TAG = GameView.class.getSimpleName();
@@ -39,6 +41,7 @@ public class GameView extends View implements Choreographer.FrameCallback
 
         if (!initialized)
         {
+            initView();
             initialized = true;
             running = true;
         }
@@ -52,7 +55,7 @@ public class GameView extends View implements Choreographer.FrameCallback
         game.init();
 
         fpsPaint.setColor(Color.BLUE);
-        fpsPaint.setTextSize(100);
+        fpsPaint.setTextSize(80);
 
         Choreographer.getInstance().postFrameCallback(this);
     }
@@ -81,14 +84,24 @@ public class GameView extends View implements Choreographer.FrameCallback
     @Override
     protected void onDraw(Canvas canvas)
     {
-        super.onDraw(canvas);
         MainGame.getInstance().draw(canvas);
-        canvas.drawText("FPS " + FPS, 10, 100, fpsPaint);
+        canvas.drawText(String.valueOf(FPS), 20, 80, fpsPaint);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        return super.onTouchEvent(event);
+        return MainGame.getInstance().onTouchEvent(event);
+    }
+
+    public void pauseGame() { running = false; }
+
+    public void resumeGame()
+    {
+        if (initialized && !running)
+        {
+            running = true;
+            Choreographer.getInstance().postFrameCallback(this);
+        }
     }
 }
