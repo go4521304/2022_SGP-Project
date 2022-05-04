@@ -32,11 +32,12 @@ public class Doodle extends Sprite
     {
         super(x, y, R.dimen.doodle_radius, R.mipmap.lik_left);
 
-        //doodleImage.add(BitmapPool.get(R.mipmap.lik_left));
-//        doodleImage.add(State.left.ordinal(), BitmapPool.get(R.mipmap.lik_left));
-//        doodleImage.add(State.left_sit.ordinal(), BitmapPool.get(R.mipmap.lik_left_sit));
-//        doodleImage.add(State.right.ordinal(), BitmapPool.get(R.mipmap.lik_right));
-//        doodleImage.add(State.right_sit.ordinal(), BitmapPool.get(R.mipmap.lik_right_sit));
+        doodleImage = new ArrayList<>();
+
+        doodleImage.add(State.left.ordinal(), BitmapPool.get(R.mipmap.lik_left));
+        doodleImage.add(State.left_sit.ordinal(), BitmapPool.get(R.mipmap.lik_left_sit));
+        doodleImage.add(State.right.ordinal(), BitmapPool.get(R.mipmap.lik_right));
+        doodleImage.add(State.right_sit.ordinal(), BitmapPool.get(R.mipmap.lik_right_sit));
     }
 
     public void setDirection(float tx, float ty)

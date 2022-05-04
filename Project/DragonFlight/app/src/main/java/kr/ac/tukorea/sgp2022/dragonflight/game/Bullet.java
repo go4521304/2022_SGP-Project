@@ -25,34 +25,39 @@ public class Bullet implements GameObject, BoxCollidable, Recyclable
 
     protected static Paint paint;
     protected static float laserWidth;
+    private float power;
     protected RectF boundingRect = new RectF();
 
-    //private static ArrayList<Bullet> recycleBin = new ArrayList<>();
-    public static Bullet get(float x, float y)
+    public static Bullet get(float x, float y, float power)
     {
         Bullet bullet = (Bullet) RecycleBin.get(Bullet.class);
         if (bullet != null)
         {
             //Bullet bullet = recycleBin.remove(0);
-            bullet.set(x, y);
+            bullet.set(x, y, power);
             return bullet;
         }
-        return new Bullet(x, y);
+        return new Bullet(x, y, power);
     }
 
-    private void set(float x, float y)
+    private void set(float x, float y, float power)
     {
-        this.x = x;
-        this.y = y;
+        {
+            this.x = x;
+            this.y = y;
+            this.power = power;
+        }
     }
 
-    private Bullet(float x, float y) {
+    private Bullet(float x, float y, float power)
+    {
         this.x = x;
         this.y = y;
         this.length = Metrics.size(R.dimen.laser_length);
         this.dy = -Metrics.size(R.dimen.laser_speed);
-
-        if (paint == null) {
+        this.power = power;
+        if (paint == null)
+        {
             paint = new Paint();
             paint.setColor(Color.RED);
             laserWidth = Metrics.size(R.dimen.laser_width);
@@ -62,7 +67,8 @@ public class Bullet implements GameObject, BoxCollidable, Recyclable
     }
 
     @Override
-    public void update() {
+    public void update()
+    {
         float frameTime = MainGame.getInstance().frameTime;
         y += dy * frameTime;
 
@@ -77,12 +83,14 @@ public class Bullet implements GameObject, BoxCollidable, Recyclable
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas)
+    {
         canvas.drawLine(x, y, x, y - length, paint);
     }
 
     @Override
-    public RectF getBoundingRect() {
+    public RectF getBoundingRect()
+    {
         return boundingRect;
     }
 
@@ -90,5 +98,10 @@ public class Bullet implements GameObject, BoxCollidable, Recyclable
     public void finish()
     {
 
+    }
+
+    public float getPower()
+    {
+        return power;
     }
 }

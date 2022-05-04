@@ -1,5 +1,6 @@
 package kr.ac.tukorea.sgp2022.dragonflight.game;
 
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
@@ -22,6 +23,8 @@ public class Enemy extends AnimSprite implements BoxCollidable, Recyclable
     private static float size;
     private static float inset;
     protected float dy;
+    private float life, maxLife;
+    protected Gauge gauge;
     protected RectF boundingRect = new RectF();
 
     static protected int[] BITMAP_IDS = {
@@ -47,13 +50,21 @@ public class Enemy extends AnimSprite implements BoxCollidable, Recyclable
         return new Enemy(level, x, speed);
     }
 
-    private void set(int level, float x, float speed)
-    {
+    private void set(int level, float x, float speed) {
         bitmap = BitmapPool.get(BITMAP_IDS[level - 1]);
         this.x = x;
         this.y = -size/2;
         this.dy = speed;
         this.level = level;
+        life = maxLife = level * 10;
+        gauge.setValue(1.0f);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+
+        gauge.draw(canvas, x, y + size / 2);
     }
 
     private Enemy(int level, float x, float speed) {
@@ -61,24 +72,34 @@ public class Enemy extends AnimSprite implements BoxCollidable, Recyclable
         super(x, -size/2, size, size, BITMAP_IDS[level - 1], 6, 0);
         this.level = level;
         dy = speed;
+        life = maxLife = level * 10;
 
-        Log.d(TAG, "Create: " + this);
+        gauge = new Gauge(
+                Metrics.size(R.dimen.enemy_gauge_width_fg), R.color.enemy_gauge_fg,
+                Metrics.size(R.dimen.enemy_gauge_width_bg), R.color.enemy_gauge_bg,
+                size * 0.8f
+        );
+        gauge.setValue(1.0f);
+
+        Log.d(TAG, "Created: " + this);
     }
 
     public static void setSize(float enemySize)
     {
         Enemy.size = enemySize;
-        Enemy.inset = enemySize/16;
+        Enemy.inset = enemySize / 16;
     }
 
     @Override
-    public void update() {
+    public void update()
+    {
         float frameTime = MainGame.getInstance().frameTime;
         y += dy * frameTime;
         setDstRectWithRadius();
         boundingRect.set(dstRect);
         boundingRect.inset(inset, inset);
-        if (dstRect.top > Metrics.height) {
+        if (dstRect.top > Metrics.height)
+        {
             MainGame.getInstance().remove(this);
             // recycleBin.add(this);
         }
@@ -93,6 +114,18 @@ public class Enemy extends AnimSprite implements BoxCollidable, Recyclable
     @Override
     public void finish()
     {
+    }
 
+    public int getScore()
+    {
+        return level * level * 100;
+    }
+
+    public boolean decreaseLife(float power)
+    {
+        life -= power;
+        if (life <= 0) return true;
+        gauge.setValue(life / maxLife);
+        return false;
     }
 }

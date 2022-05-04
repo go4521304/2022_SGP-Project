@@ -3,14 +3,11 @@ package kr.ac.tukorea.sgp2022.dragonflight.game;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import kr.ac.tukorea.sgp2022.dragonflight.framework.CollisionChecker;
-import kr.ac.tukorea.sgp2022.dragonflight.framework.CollisionHelper;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
 import kr.ac.tukorea.sgp2022.dragonflight.R;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.GameObject;
@@ -22,6 +19,7 @@ public class MainGame
 {
     private static final String TAG = MainGame.class.getSimpleName();
     private Paint collisionPaint;
+    public Score score;
 
     public static MainGame getInstance()
     {
@@ -47,7 +45,7 @@ public class MainGame
 
     public enum Layer
     {
-        bullet, enemy, player, controller, COUNT
+        bg1, bullet, enemy, player, bg2, ui, controller, COUNT
     }
 
     public static void clear()
@@ -68,6 +66,12 @@ public class MainGame
         float fighterY = Metrics.height - Metrics.size(R.dimen.fighter_y_offset);
         fighter = new Fighter(Metrics.width / 2, fighterY);
         add(Layer.player, fighter);
+
+        score = new Score();
+        add(Layer.ui, score);
+
+        add(Layer.bg1, new VertScrollBackground(R.mipmap.bg_city, Metrics.size(R.dimen.bg_speed_city)));
+        add(Layer.bg2, new VertScrollBackground(R.mipmap.clouds, Metrics.size(R.dimen.bg_speed_cloud)));
 
         collisionPaint = new Paint();
         collisionPaint.setColor(Color.RED);
@@ -93,13 +97,7 @@ public class MainGame
                 gobj.update();
             }
         }
-        //checkCollision();
     }
-
-//    private void checkCollision()
-//    {
-//
-//    }
 
     public ArrayList<GameObject> objectsAt(Layer layer)
     {
