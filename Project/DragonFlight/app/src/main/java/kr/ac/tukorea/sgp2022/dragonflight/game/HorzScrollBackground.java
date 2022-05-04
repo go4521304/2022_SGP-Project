@@ -5,17 +5,17 @@ import android.graphics.Canvas;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.Metrics;
 import kr.ac.tukorea.sgp2022.dragonflight.framework.Sprite;
 
-public class VertScrollBackground extends Sprite
+public class HorzScrollBackground extends Sprite
 {
     private final float speed;
-    private final int height;
+    private final int width;
 
-    public VertScrollBackground(int bitmapResId, float speed)
+    public HorzScrollBackground(int bitmapResId, float speed)
     {
         super(Metrics.width / 2, Metrics.height / 2,
                 Metrics.width, Metrics.height, bitmapResId);
-        height = bitmap.getHeight() * Metrics.width / bitmap.getWidth();
-        setDstRect(Metrics.width, height);
+        width = bitmap.getWidth() * Metrics.height / bitmap.getHeight();
+        setDstRect(width, Metrics.height);
 
         this.speed = speed;
     }
@@ -23,20 +23,18 @@ public class VertScrollBackground extends Sprite
     @Override
     public void update()
     {
-        this.y += speed * MainGame.getInstance().frameTime;
-        //if (y > Metrics.height) y = 0;
-        //setDstRect(Metrics.width, height);
+        this.x += speed * MainGame.getInstance().frameTime;
     }
 
     public void draw(Canvas canvas)
     {
-        int curr = (int)y % height;
-        if (curr > 0) curr -= height;
+        int curr = (int)x % width;
+        if (curr > 0) curr -= width;
         while (curr < Metrics.height)
         {
-            dstRect.set(0, curr, Metrics.width, curr + height);
+            dstRect.set(curr, 0, curr + width, Metrics.height);
             canvas.drawBitmap(bitmap, null, dstRect, null);
-            curr += height;
+            curr += width;
         }
     }
 }
