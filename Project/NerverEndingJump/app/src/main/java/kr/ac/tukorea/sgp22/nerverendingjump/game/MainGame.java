@@ -1,6 +1,7 @@
 package kr.ac.tukorea.sgp22.nerverendingjump.game;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -12,15 +13,21 @@ import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
 
 public class MainGame
 {
+    private static final String TAG = MainGame.class.getSimpleName();
     private static MainGame singleton;
     public float frameTime;
 
     private ArrayList<ArrayList<GameObject>> layers;
     private Doodle doodle;
 
+    public Doodle getDoodle()
+    {
+        return doodle;
+    }
+
     public enum Layer
     {
-        bullet, monster, player, foothold, ui, COUNT
+        monster, block, player, bullet, ui, COUNT
     }
 
     public static MainGame getInstance()
@@ -44,6 +51,21 @@ public class MainGame
         float doodleY = Metrics.height - Metrics.size(R.dimen.doodle_y_offset);
         doodle = new Doodle(Metrics.width/2, doodleY);
         add(Layer.player, doodle);
+
+        Block block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 200, 300, 80);
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 750, 300, 80);
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + 300, Metrics.height - 1000, 300, 80);
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 1400, 300, 80);
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 2000, 300, 80);
+        add(Layer.block, block);
     }
 
     private void initLayers(int count)
@@ -109,5 +131,13 @@ public class MainGame
                 objects.add(gameObject);
             }
         });
+    }
+
+    public void SetDirection(double Direction)
+    {
+        if (Direction > 0)
+            doodle.setDirection(1);
+        else if (Direction < 0)
+            doodle.setDirection(-1);
     }
 }

@@ -4,11 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 
-public class Sprite implements GameObject
+public class Sprite extends GameObject
 {
     protected Bitmap bitmap;
-    protected RectF dstRect = new RectF();
     protected float x, y, radius;
+    protected RectF dstRect = new RectF();
+
     public Sprite(float x, float y, int radiusDimenResId, int bitmapResId) {
         this.x = x;
         this.y = y;
@@ -35,6 +36,12 @@ public class Sprite implements GameObject
     public void draw(Canvas canvas)
     {
         canvas.drawBitmap(bitmap, null, dstRect, null);
+    }
+
+    @Override
+    public RectF getRect()
+    {
+        return dstRect;
     }
 
     public void setDstRectWithRadius()

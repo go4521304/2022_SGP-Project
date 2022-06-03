@@ -94,7 +94,10 @@ public class GameView extends View implements Choreographer.FrameCallback
         return MainGame.getInstance().onTouchEvent(event);
     }
 
-    public void pauseGame() { running = false; }
+    public void pauseGame()
+    {
+        running = false;
+    }
 
     public void resumeGame()
     {
