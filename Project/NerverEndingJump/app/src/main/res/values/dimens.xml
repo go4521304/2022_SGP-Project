@@ -2,5 +2,7 @@
 <resources>
     <dimen name="doodle_radius">30dp</dimen>
     <dimen name="doodle_y_offset">100dp</dimen>
-    <dimen name = "doodle_x_speed">300dp</dimen>
+    <dimen name ="doodle_x_speed">300dp</dimen>
+    <dimen name="block_width">80dp</dimen>
+    <dimen name="block_height">20dp</dimen>
 </resources>

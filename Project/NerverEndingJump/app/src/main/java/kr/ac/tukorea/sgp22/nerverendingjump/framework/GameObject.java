@@ -7,6 +7,4 @@ public abstract class GameObject extends CollisionHelper
 {
     public abstract void update();
     public abstract void draw(Canvas canvas);
-
-    public abstract RectF getRect();
 }

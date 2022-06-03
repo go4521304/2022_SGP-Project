@@ -20,6 +20,8 @@ public class Doodle extends Sprite
     private static final String TAG = Doodle.class.getSimpleName();
     private static final ArrayList<Bitmap> doodleImage = new ArrayList<>();
 
+    private static final MainGame game = MainGame.getInstance();
+
     private float dx, dy = 0;
     private final float jumpSpeed = 2500;
     private final float gravity = 80;
@@ -89,7 +91,7 @@ public class Doodle extends Sprite
     @Override
     public void update()
     {
-        float frameTime = MainGame.getInstance().frameTime;
+        float frameTime = game.frameTime;
 
         // 캐릭터 Y축 이동
         dy += gravity;
@@ -135,8 +137,8 @@ public class Doodle extends Sprite
 
             sitTimer -= frameTime;
         }
-        y += t_dy;
-        dstRect.offset(0, t_dy);
+        y += t_dy + game.getScrollVal();
+        dstRect.offset(0, t_dy + game.getScrollVal());
 
         if (dx != 0)
         {

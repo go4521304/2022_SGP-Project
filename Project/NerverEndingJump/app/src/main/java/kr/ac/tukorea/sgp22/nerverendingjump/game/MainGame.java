@@ -19,6 +19,7 @@ public class MainGame
 
     private ArrayList<ArrayList<GameObject>> layers;
     private Doodle doodle;
+    private Background bg;
 
     public Doodle getDoodle()
     {
@@ -27,7 +28,7 @@ public class MainGame
 
     public enum Layer
     {
-        monster, block, player, bullet, ui, COUNT
+        bg, monster, block, player, bullet, ui, COUNT
     }
 
     public static MainGame getInstance()
@@ -43,30 +44,6 @@ public class MainGame
     {
         singleton = null;
     }
-    
-    public void init()
-    {
-        initLayers(Layer.COUNT.ordinal());
-
-        float doodleY = Metrics.height - Metrics.size(R.dimen.doodle_y_offset);
-        doodle = new Doodle(Metrics.width/2, doodleY);
-        add(Layer.player, doodle);
-
-        Block block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 200, 300, 80);
-        add(Layer.block, block);
-
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 750, 300, 80);
-        add(Layer.block, block);
-
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + 300, Metrics.height - 1000, 300, 80);
-        add(Layer.block, block);
-
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 1400, 300, 80);
-        add(Layer.block, block);
-
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 2000, 300, 80);
-        add(Layer.block, block);
-    }
 
     private void initLayers(int count)
     {
@@ -76,6 +53,38 @@ public class MainGame
         {
             layers.add(new ArrayList<>());
         }
+    }
+    
+    public void init()
+    {
+        // 레이어 리스트 추가
+        initLayers(Layer.COUNT.ordinal());
+
+        // 플레이어
+        float doodleY = Metrics.height - Metrics.size(R.dimen.doodle_y_offset);
+        doodle = new Doodle(Metrics.width/2, doodleY);
+        add(Layer.player, doodle);
+        
+        // 배경 추가
+        bg = new Background(R.mipmap.background);
+        add(Layer.bg, bg);
+
+        ///////////////////////// 테스트용 블록들 /////////////////////////////
+        Block block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 200, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 750, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + 300, Metrics.height - 1000, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 1400, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 2000, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+        ///////////////////////////////////////////////////////////////////
     }
 
     public void update(int elapsed)
@@ -140,4 +149,6 @@ public class MainGame
         else if (Direction < 0)
             doodle.setDirection(-1);
     }
+
+    public float getScrollVal() { return bg.getScrollVal(); }
 }

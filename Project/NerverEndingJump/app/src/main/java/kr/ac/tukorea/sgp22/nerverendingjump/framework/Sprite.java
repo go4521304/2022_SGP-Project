@@ -29,7 +29,6 @@ public class Sprite extends GameObject
     @Override
     public void update()
     {
-
     }
 
     @Override
@@ -38,11 +37,13 @@ public class Sprite extends GameObject
         canvas.drawBitmap(bitmap, null, dstRect, null);
     }
 
-    @Override
     public RectF getRect()
     {
         return dstRect;
     }
+
+    public float getX() { return x; }
+    public float getY() { return y; }
 
     public void setDstRectWithRadius()
     {

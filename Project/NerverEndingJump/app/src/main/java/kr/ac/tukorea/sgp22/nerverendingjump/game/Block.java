@@ -15,6 +15,8 @@ public class Block extends Sprite
         normal, fake, vertical, horizon, singleUse, COUNT
     }
 
+    private static final MainGame game = MainGame.getInstance();
+
     private static final ArrayList<Bitmap> blockImage = new ArrayList<>();
     private Type blockType;
 
@@ -32,11 +34,13 @@ public class Block extends Sprite
     @Override
     public void update()
     {
-        Doodle player = MainGame.getInstance().getDoodle();
+        Doodle player = game.getDoodle();
         if (player.isFalling() && CollisionCheck(player, this))
         {
             player.jumping();
         }
 
+        y += game.getScrollVal();
+        dstRect.offset(0, game.getScrollVal());
     }
 }
