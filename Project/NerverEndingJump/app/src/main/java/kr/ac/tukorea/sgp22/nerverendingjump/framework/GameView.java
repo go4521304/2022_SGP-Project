@@ -19,6 +19,8 @@ public class GameView extends View implements Choreographer.FrameCallback
     private static final String TAG = GameView.class.getSimpleName();
 
     public static GameView view;
+    public static MainGame game;
+
     private boolean initialized;
     private boolean running;
 
@@ -51,7 +53,7 @@ public class GameView extends View implements Choreographer.FrameCallback
     {
         view = this;
 
-        MainGame game = MainGame.getInstance();
+        game = MainGame.getInstance();
         game.init();
 
         fpsPaint.setColor(Color.BLUE);
@@ -97,6 +99,8 @@ public class GameView extends View implements Choreographer.FrameCallback
     public void pauseGame()
     {
         running = false;
+
+        game.getDoodle().unregisterListener();
     }
 
     public void resumeGame()
@@ -105,6 +109,7 @@ public class GameView extends View implements Choreographer.FrameCallback
         {
             running = true;
             Choreographer.getInstance().postFrameCallback(this);
+            game.getDoodle().registerListener();
         }
     }
 }

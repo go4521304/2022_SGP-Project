@@ -1,5 +1,6 @@
 package kr.ac.tukorea.sgp22.nerverendingjump.framework;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.TypedValue;
 

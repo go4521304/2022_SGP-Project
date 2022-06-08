@@ -2,8 +2,8 @@
 <resources>
     <dimen name="doodle_width">60dp</dimen>
     <dimen name="doodle_height">60dp</dimen>
-    <dimen name="doodle_y_offset">100dp</dimen>
-    <dimen name ="doodle_x_speed">300dp</dimen>
+    <dimen name="doodle_x_speed">1500dp</dimen>
+    <dimen name="block_y_offset">100dp</dimen>
     <dimen name="block_width">80dp</dimen>
     <dimen name="block_height">20dp</dimen>
 </resources>

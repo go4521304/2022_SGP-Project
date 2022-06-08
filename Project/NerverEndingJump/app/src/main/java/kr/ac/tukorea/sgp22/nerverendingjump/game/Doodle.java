@@ -1,15 +1,22 @@
 package kr.ac.tukorea.sgp22.nerverendingjump.game;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.Log;
 
 
+import kr.ac.tukorea.sgp22.nerverendingjump.app.MainActivity;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameView;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
 import kr.ac.tukorea.sgp22.nerverendingjump.R;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Sprite;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.BitmapPool;
+
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 
 public class Doodle extends Sprite
 {
@@ -21,6 +28,12 @@ public class Doodle extends Sprite
     private final float jumpSpeed = 2500;
     private final float gravity = 80;
     private final float sitTime = 0.2f;
+
+    private SensorManager sensorManager;
+    private SensorEventListener sensorEventListener;
+    private Sensor sensor;
+
+    private float[] initOrientation;
 
     private enum State
     {
@@ -48,9 +61,53 @@ public class Doodle extends Sprite
     {
         super(x, y, Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_width), R.mipmap.lik_left);
 
+        sensorManager = (SensorManager) GameView.view.getContext().getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+        sensorEventListener = new UserSensorListner();
+
         state = State.left;
         sitTimer = 0.0f;
         falling = true;
+
+        registerListener();
+    }
+
+    public class UserSensorListner implements SensorEventListener
+    {
+        @Override
+        public void onSensorChanged(SensorEvent event)
+        {
+            if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR)
+            {
+                if (event.values[0] != 0.0 && event.values[1] != 0.0 && event.values[2] != 0.0)
+                {
+                    if (initOrientation == null)
+                    {
+                        initOrientation = new float[event.values.length];
+                        System.arraycopy(event.values, 0, initOrientation, 0, event.values.length);
+                    }
+
+                    setDirection(event.values[1] - initOrientation[1]);
+
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy)
+        {
+
+        }
+    }
+
+    public void registerListener()
+    {
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void unregisterListener()
+    {
+        sensorManager.unregisterListener(sensorEventListener);
     }
 
     @Override
@@ -75,25 +132,8 @@ public class Doodle extends Sprite
 
     public void setDirection(float Direction)
     {
-        Log.d(TAG, "setDirection: " + Direction);
-        if (Direction > 5)
-        {
-            dx = Metrics.size(R.dimen.doodle_x_speed);
-            if (Direction == -1)
-            {
-                dx = -dx;
-            }
-            this.state = dx < 0 ? State.left : State.right;
-        }
-        else
-            dx = 0;
-//        dx = Metrics.size(R.dimen.doodle_x_speed);
-//        if (Direction == -1)
-//        {
-//            dx = -dx;
-//        }
-//
-//        this.state = dx < 0 ? State.left : State.right;
+        dx = Direction * Metrics.size(R.dimen.doodle_x_speed);
+        this.state = Direction < 0 ? State.left : State.right;
     }
 
     public void stopMove()
