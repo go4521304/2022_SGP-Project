@@ -1,13 +1,9 @@
 package kr.ac.tukorea.sgp22.nerverendingjump.game;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.Log;
 
-import java.util.ArrayList;
 
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameView;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
@@ -18,18 +14,32 @@ import kr.ac.tukorea.sgp22.nerverendingjump.framework.BitmapPool;
 public class Doodle extends Sprite
 {
     private static final String TAG = Doodle.class.getSimpleName();
-    private static final ArrayList<Bitmap> doodleImage = new ArrayList<>();
 
     private static final MainGame game = MainGame.getInstance();
 
     private float dx, dy = 0;
     private final float jumpSpeed = 2500;
     private final float gravity = 80;
+    private final float sitTime = 0.2f;
 
     private enum State
     {
-        left, left_sit, right, right_sit, COUNT
+        left(R.mipmap.lik_left), left_sit(R.mipmap.lik_left_sit),
+        right(R.mipmap.lik_right), right_sit(R.mipmap.lik_right_sit);
+
+        private final int image;
+        State(int value)
+        {
+            image = value;
+        }
+
+        public int getImageID()
+        {
+            return image;
+        }
     }
+
+    private State state;
 
     private boolean falling;
     private float sitTimer;
@@ -38,14 +48,8 @@ public class Doodle extends Sprite
     {
         super(x, y, Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_width), R.mipmap.lik_left);
 
-        if (doodleImage.isEmpty())
-        {
-            doodleImage.add(State.left.ordinal(), BitmapPool.get(R.mipmap.lik_left));
-            doodleImage.add(State.left_sit.ordinal(), BitmapPool.get(R.mipmap.lik_left_sit));
-            doodleImage.add(State.right.ordinal(), BitmapPool.get(R.mipmap.lik_right));
-            doodleImage.add(State.right_sit.ordinal(), BitmapPool.get(R.mipmap.lik_right_sit));
-        }
-
+        state = State.left;
+        sitTimer = 0.0f;
         falling = true;
     }
 
@@ -65,6 +69,8 @@ public class Doodle extends Sprite
         {
             dx = -dx;
         }
+
+        this.state = dx < 0 ? State.left : State.right;
     }
 
     public void setDirection(int Direction)
@@ -74,6 +80,8 @@ public class Doodle extends Sprite
         {
             dx = -dx;
         }
+
+        this.state = dx < 0 ? State.left : State.right;
     }
 
     public void stopMove()
@@ -83,7 +91,7 @@ public class Doodle extends Sprite
 
     public void jumping()
     {
-        sitTimer = 0.5f;
+        sitTimer = sitTime;
         dy = -jumpSpeed;
     }
 
@@ -98,73 +106,46 @@ public class Doodle extends Sprite
         dy += gravity;
         float t_dy = dy * frameTime;
 
-        //////////////////////////////////////
-        // 테스트용 y위치
-//        float doodleY = Metrics.height - Metrics.size(R.dimen.doodle_y_offset);
-//        // 이걸 충돌 감지하고 뛰도록 바꿔야함
-//        if (y + t_dy >= doodleY)
-//        {
-//            dy = -jumpSpeed;
-//            sitTimer = 0.3f;
-//        }
-        //////////////////////////////////////
-
         // 아래로 떨어지는 중인지 체크
         falling = dy >= 0;
+
+        y += t_dy + game.getScrollVal();
+        dstRect.offset(0, t_dy + game.getScrollVal());
 
         // 스프라이트 선택 부분
         if (sitTimer <= 0.f)
         {
-            if (dx < 0)
-            {
-                this.bitmap = doodleImage.get(State.left.ordinal());
-                Log.d(TAG, "update: normal L");
-
-            }
-            else if (dx > 0)
-            {
-                this.bitmap = doodleImage.get(State.right.ordinal());
-                Log.d(TAG, "update: normal R");
-
-            }
+            this.bitmap = BitmapPool.get(this.state.getImageID());
         }
-        
+
         else    // 앉아있는 스프라이트
         {
-            if (dx < 0)
+            if (this.state == State.left)
             {
-                this.bitmap = doodleImage.get(State.left_sit.ordinal());
-
-                Log.d(TAG, "update: jump R");
-
+                this.bitmap = BitmapPool.get(State.left_sit.getImageID());
             }
-            else if (dx > 0)
+            else
             {
-                this.bitmap = doodleImage.get(State.right_sit.ordinal());
-
-                Log.d(TAG, "update: jump L");
-
+                this.bitmap = BitmapPool.get(State.right_sit.getImageID());
             }
 
             sitTimer -= frameTime;
         }
 
-        y += t_dy + game.getScrollVal();
-        dstRect.offset(0, t_dy + game.getScrollVal());
-
         if (dx != 0)
         {
             // 캐릭터 X축 이동
             float t_dx = dx * frameTime;
-            if ((t_dx < 0 && 30 <= dstRect.left) || (t_dx > 0 && dstRect.right <= Metrics.width - 25))
+            x += t_dx;
+            if (x < 0)
             {
-                x += t_dx;
-                dstRect.offset(t_dx, 0);
+                x = Metrics.width;
             }
-            else
+            else if (x > Metrics.width)
             {
-                dx = 0;
+                x = 0;
             }
+            setDstRect(Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_height));
         }
     }
 

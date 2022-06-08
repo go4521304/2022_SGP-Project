@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
                     if (y != 0)
                     {
                         MainGame.getInstance().SetDirection(y * RAD2DGR);
-                        Log.d(TAG, "onSensorChanged: " + (y * RAD2DGR));
                     }
                 }
             }
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
         if (GameView.view != null)
         {
             GameView.view.resumeGame();

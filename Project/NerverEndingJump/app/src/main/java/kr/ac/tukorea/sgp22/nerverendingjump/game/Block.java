@@ -1,9 +1,5 @@
 package kr.ac.tukorea.sgp22.nerverendingjump.game;
 
-import android.graphics.Bitmap;
-
-import java.util.ArrayList;
-
 import kr.ac.tukorea.sgp22.nerverendingjump.R;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.BitmapPool;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Recycle;
@@ -22,7 +18,7 @@ public class Block extends Sprite
             image = value;
         }
 
-        public int getImage()
+        public int getImageID()
         {
             return image;
         }
@@ -30,7 +26,6 @@ public class Block extends Sprite
 
     private static final MainGame game = MainGame.getInstance();
 
-    private static final ArrayList<Bitmap> blockImage = new ArrayList<>();
     private Type blockType;
 
     public Block(int type, float x, float y, float width, float height)
@@ -38,12 +33,8 @@ public class Block extends Sprite
         super(x, y, width, height, R.mipmap.block_green);
 
         this.blockType = Type.values()[type];
+        this.bitmap = BitmapPool.get(blockType.getImageID());
 
-        if (blockImage.isEmpty())
-        {
-            blockImage.add(Type.normal.ordinal(), BitmapPool.get(R.mipmap.block_green));
-            // Add remain blocks
-        }
     }
 
     public static Block get(int type, float x, float y, float width, float height)
@@ -59,11 +50,11 @@ public class Block extends Sprite
 
     private void set(int type, float x, float y, float width, float height)
     {
-        blockType = Type.values()[type];
+        this.blockType = Type.values()[type];
         this.x = x;
         this.y = y;
         this.setDstRect(width, height);
-        this.bitmap = BitmapPool.get(blockType.getImage());
+        this.bitmap = BitmapPool.get(blockType.getImageID());
     }
 
     @Override

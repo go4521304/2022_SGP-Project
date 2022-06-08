@@ -61,8 +61,8 @@ public class MainGame
         initLayers(Layer.COUNT.ordinal());
 
         // 플레이어
-        float doodleY = Metrics.height - Metrics.size(R.dimen.doodle_y_offset);
-        doodle = new Doodle(Metrics.width/2, doodleY);
+        //float doodleY = Metrics.height - Metrics.size(R.dimen.doodle_y_offset);
+        doodle = new Doodle(Metrics.width/2, Metrics.height/2);
         add(Layer.player, doodle);
         
         // 배경 추가
@@ -72,18 +72,26 @@ public class MainGame
         ///////////////////////// 테스트용 블록들 /////////////////////////////
         Block block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 200, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
         add(Layer.block, block);
-
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 750, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - Metrics.size(R.dimen.block_width), Metrics.height - 200, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - Metrics.size(R.dimen.block_width) - Metrics.size(R.dimen.block_width), Metrics.height - 200, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + Metrics.size(R.dimen.block_width), Metrics.height - 200, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2+ Metrics.size(R.dimen.block_width) + Metrics.size(R.dimen.block_width), Metrics.height - 200, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
         add(Layer.block, block);
 
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + 300, Metrics.height - 1000, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
-        add(Layer.block, block);
-
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 1400, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
-        add(Layer.block, block);
-
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 2000, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
-        add(Layer.block, block);
+//        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 750, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+//        add(Layer.block, block);
+//
+//        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + 300, Metrics.height - 1000, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+//        add(Layer.block, block);
+//
+//        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - 400, Metrics.height - 1400, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+//        add(Layer.block, block);
+//
+//        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - 2000, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+//        add(Layer.block, block);
         ///////////////////////////////////////////////////////////////////
     }
 
