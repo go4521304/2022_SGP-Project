@@ -73,15 +73,27 @@ public class Doodle extends Sprite
         this.state = dx < 0 ? State.left : State.right;
     }
 
-    public void setDirection(int Direction)
+    public void setDirection(float Direction)
     {
-        dx = Metrics.size(R.dimen.doodle_x_speed);
-        if (Direction == -1)
+        Log.d(TAG, "setDirection: " + Direction);
+        if (Direction > 5)
         {
-            dx = -dx;
+            dx = Metrics.size(R.dimen.doodle_x_speed);
+            if (Direction == -1)
+            {
+                dx = -dx;
+            }
+            this.state = dx < 0 ? State.left : State.right;
         }
-
-        this.state = dx < 0 ? State.left : State.right;
+        else
+            dx = 0;
+//        dx = Metrics.size(R.dimen.doodle_x_speed);
+//        if (Direction == -1)
+//        {
+//            dx = -dx;
+//        }
+//
+//        this.state = dx < 0 ? State.left : State.right;
     }
 
     public void stopMove()

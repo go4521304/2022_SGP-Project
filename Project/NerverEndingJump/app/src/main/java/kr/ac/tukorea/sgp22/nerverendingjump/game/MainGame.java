@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 
 import kr.ac.tukorea.sgp22.nerverendingjump.R;
+import kr.ac.tukorea.sgp22.nerverendingjump.app.MainActivity;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameObject;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameView;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
@@ -149,15 +150,6 @@ public class MainGame
             }
         });
     }
-
-    public void SetDirection(double Direction)
-    {
-        if (Direction > 0)
-            doodle.setDirection(1);
-        else if (Direction < 0)
-            doodle.setDirection(-1);
-    }
-
 
     public float getScrollVal() { return bg.getScrollVal(); }
 }

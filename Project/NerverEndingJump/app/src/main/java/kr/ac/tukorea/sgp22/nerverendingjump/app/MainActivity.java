@@ -19,13 +19,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private SensorManager sensorManager;
     private SensorEventListener sensorEventListener;
-    private Sensor sensor;
+    private Sensor accelerometer, magnetic;
+
+    private float[] accelOutput;
+    private float[] magOutput;
+    private float[] orientation = new float[3];
+    private float[] initOrientation;
 
     private double timestamp;
     private double dt;
-
-    private double RAD2DGR = 180 / Math.PI;
-    private static final float NS2S = 1.0f/1000000000.0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,31 +35,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                double x = event.values[0];
-                double y = event.values[1];
-                double z = event.values[2];
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-                dt = (event.timestamp - timestamp)* NS2S;
-                timestamp = event.timestamp;
+        sensorEventListener = new UserSensorListner();
 
-                if (dt - timestamp * NS2S != 0)
-                {
-                    if (y != 0)
-                    {
-                        MainGame.getInstance().SetDirection(y * RAD2DGR);
-                    }
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-            }
-        };
+        accelOutput = null;
+        magOutput = null;
+        initOrientation = null;
     }
 
     @Override
@@ -75,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, magnetic, SensorManager.SENSOR_DELAY_NORMAL);
         if (GameView.view != null)
         {
             GameView.view.resumeGame();
@@ -89,5 +75,41 @@ public class MainActivity extends AppCompatActivity {
         sensorManager.unregisterListener(sensorEventListener);
         GameView.view = null;
         MainGame.clear();
+    }
+
+    public class UserSensorListner implements SensorEventListener
+    {
+        @Override
+        public void onSensorChanged(SensorEvent event)
+        {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+                accelOutput = event.values;
+            else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+                magOutput = event.values;
+
+            if (accelOutput != null && magOutput != null)
+            {
+                float[] R = new float[9];
+                float[] I = new float[9];
+                boolean success = SensorManager.getRotationMatrix(R, I, accelOutput, magOutput);
+                if (success)
+                {
+                    SensorManager.getOrientation(R, orientation);
+                    if (initOrientation == null)
+                    {
+                        initOrientation = new float[orientation.length];
+                        System.arraycopy(orientation, 0, initOrientation, 0, orientation.length);
+                    }
+
+                    MainGame.getInstance().getDoodle().setDirection((orientation[1] - initOrientation[1]) * 1000);
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy)
+        {
+
+        }
     }
 }
