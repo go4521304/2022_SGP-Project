@@ -150,5 +150,6 @@ public class MainGame
             doodle.setDirection(-1);
     }
 
+
     public float getScrollVal() { return bg.getScrollVal(); }
 }

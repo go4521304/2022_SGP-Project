@@ -36,7 +36,7 @@ public class Doodle extends Sprite
 
     public Doodle(float x, float y)
     {
-        super(x, y, R.dimen.doodle_radius, R.mipmap.lik_left);
+        super(x, y, Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_width), R.mipmap.lik_left);
 
         if (doodleImage.isEmpty())
         {
@@ -52,7 +52,7 @@ public class Doodle extends Sprite
     @Override
     public RectF getRect()
     {
-        int size = (int)Metrics.size(R.dimen.doodle_radius) / 2;
+        int size = (int)Metrics.size(R.dimen.doodle_height) / 2;
         RectF tmp = new RectF();
         tmp.set(dstRect.left, dstRect.bottom - size, dstRect.right, dstRect.bottom);
         return tmp;
@@ -83,6 +83,7 @@ public class Doodle extends Sprite
 
     public void jumping()
     {
+        sitTimer = 0.5f;
         dy = -jumpSpeed;
     }
 
@@ -117,10 +118,14 @@ public class Doodle extends Sprite
             if (dx < 0)
             {
                 this.bitmap = doodleImage.get(State.left.ordinal());
+                Log.d(TAG, "update: normal L");
+
             }
             else if (dx > 0)
             {
                 this.bitmap = doodleImage.get(State.right.ordinal());
+                Log.d(TAG, "update: normal R");
+
             }
         }
         
@@ -129,14 +134,21 @@ public class Doodle extends Sprite
             if (dx < 0)
             {
                 this.bitmap = doodleImage.get(State.left_sit.ordinal());
+
+                Log.d(TAG, "update: jump R");
+
             }
             else if (dx > 0)
             {
                 this.bitmap = doodleImage.get(State.right_sit.ordinal());
+
+                Log.d(TAG, "update: jump L");
+
             }
 
             sitTimer -= frameTime;
         }
+
         y += t_dy + game.getScrollVal();
         dstRect.offset(0, t_dy + game.getScrollVal());
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="doodle_radius">30dp</dimen>
+    <dimen name="doodle_width">60dp</dimen>
+    <dimen name="doodle_height">60dp</dimen>
     <dimen name="doodle_y_offset">100dp</dimen>
     <dimen name ="doodle_x_speed">300dp</dimen>
     <dimen name="block_width">80dp</dimen>
