@@ -1,6 +1,5 @@
 package kr.ac.tukorea.sgp22.nerverendingjump.game;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -8,7 +7,6 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 
 import kr.ac.tukorea.sgp22.nerverendingjump.R;
-import kr.ac.tukorea.sgp22.nerverendingjump.app.MainActivity;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameObject;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameView;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
@@ -82,6 +80,9 @@ public class MainGame
         block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2+ Metrics.size(R.dimen.block_width) + Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
         add(Layer.block, block);
 
+        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + 400, Metrics.height/2+400, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+
     }
 
     public void update(int elapsed)
@@ -137,6 +138,23 @@ public class MainGame
                 objects.add(gameObject);
             }
         });
+    }
+
+    public void remove(Layer layer, GameObject object)
+    {
+        GameView.view.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                layers.get(layer.ordinal()).remove(object);
+            }
+        });
+    }
+
+    public int blockCount()
+    {
+        return layers.get(Layer.block.ordinal()).size();
     }
 
     public float getScrollVal() { return bg.getScrollVal(); }

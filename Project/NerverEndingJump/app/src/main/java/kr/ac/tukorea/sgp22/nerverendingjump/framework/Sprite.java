@@ -40,4 +40,9 @@ public class Sprite extends GameObject
     {
         dstRect.set(x - width / 2, y - height / 2, x + width / 2, y + height / 2);
     }
+
+    public void changeSprite(int bitmapID)
+    {
+        bitmap = BitmapPool.get(bitmapID);
+    }
 }

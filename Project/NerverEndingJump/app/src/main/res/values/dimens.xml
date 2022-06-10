@@ -6,4 +6,8 @@
     <dimen name="block_y_offset">100dp</dimen>
     <dimen name="block_width">80dp</dimen>
     <dimen name="block_height">20dp</dimen>
+    <dimen name="btn_play_x">50dp</dimen>
+    <dimen name="btn_play_y">200dp</dimen>
+    <dimen name="btn_play_w">150dp</dimen>
+    <dimen name="btn_play_h">50dp</dimen>
 </resources>

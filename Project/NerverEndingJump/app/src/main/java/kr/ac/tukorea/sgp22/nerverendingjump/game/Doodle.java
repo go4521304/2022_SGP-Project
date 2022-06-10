@@ -167,18 +167,18 @@ public class Doodle extends Sprite
         // 스프라이트 선택 부분
         if (sitTimer <= 0.f)
         {
-            this.bitmap = BitmapPool.get(this.state.getImageID());
+            changeSprite(this.state.getImageID());
         }
 
         else    // 앉아있는 스프라이트
         {
             if (this.state == State.left)
             {
-                this.bitmap = BitmapPool.get(State.left_sit.getImageID());
+                changeSprite(State.left_sit.getImageID());
             }
             else
             {
-                this.bitmap = BitmapPool.get(State.right_sit.getImageID());
+                changeSprite(State.right_sit.getImageID());
             }
 
             sitTimer -= frameTime;
