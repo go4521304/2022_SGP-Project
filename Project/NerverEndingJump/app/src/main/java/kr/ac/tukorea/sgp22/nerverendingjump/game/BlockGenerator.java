@@ -1,0 +1,94 @@
+package kr.ac.tukorea.sgp22.nerverendingjump.game;
+
+import android.graphics.Canvas;
+import android.util.Log;
+
+import java.util.Random;
+
+import kr.ac.tukorea.sgp22.nerverendingjump.R;
+import kr.ac.tukorea.sgp22.nerverendingjump.framework.CollisionHelper;
+import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameObject;
+import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
+
+public class BlockGenerator extends GameObject
+{
+    private static final String TAG = BlockGenerator.class.getSimpleName();
+    private static MainGame game = null;
+
+    private static final Random random = new Random();
+
+    private float timegap = 0;
+
+    private int makeCount;
+
+    public BlockGenerator()
+    {
+        if (game == null)
+            game = MainGame.getInstance();
+
+        random.setSeed(System.currentTimeMillis());
+
+        makeCount = 0;
+
+        Block block;
+        for (int i = 0; i < 20; ++i)
+        {
+            float x = random.nextInt(Metrics.width);
+            float y = random.nextInt(Metrics.height);
+
+            y -= Metrics.height / 2;
+
+            block = new Block((int) (Math.random() % Block.Type.COUNT.ordinal()), x, y, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+            game.add(MainGame.Layer.block, block);
+        }
+    }
+
+    public void update()
+    {
+        if (game.score > 0 && game.score < 10000)
+        {
+            makeCount = 30 - game.blockCount();
+        } else if (game.score > 10000 && game.score < 20000)
+        {
+            makeCount = 28 - game.blockCount();
+        } else if (game.score > 20000 && game.score < 50000)
+        {
+            makeCount = 26 - game.blockCount();
+        }
+        else if (game.score > 50000 && game.score < 100000)
+        {
+            makeCount = 24 - game.blockCount();
+        }
+        else if (game.score > 100000 && game.score < 200000)
+        {
+            makeCount = 20 - game.blockCount();
+        }
+        else
+        {
+            makeCount = 20 - game.blockCount();
+        }
+
+        if (makeCount > 0)
+            Log.d(TAG, "update: " + makeCount);
+
+        Block block;
+
+        for (int i = 0; i < makeCount; ++i)
+        {
+            float x = random.nextInt(Metrics.width);
+            float y = random.nextInt(Metrics.height / 2);
+
+            y -= Metrics.height /2;
+
+            block = new Block((int) (Math.random() % Block.Type.COUNT.ordinal()), x, y, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+            game.add(MainGame.Layer.block, block);
+
+        }
+    }
+
+    @Override
+    public void draw(Canvas canvas)
+    {
+
+    }
+}

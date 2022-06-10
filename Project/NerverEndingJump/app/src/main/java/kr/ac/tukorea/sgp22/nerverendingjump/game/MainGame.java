@@ -17,9 +17,12 @@ public class MainGame
     private static MainGame singleton;
     public float frameTime;
 
+    public float score;
+
     private ArrayList<ArrayList<GameObject>> layers;
     private Doodle doodle;
     private Background bg;
+    private BlockGenerator blockGenerator;
 
     public Doodle getDoodle()
     {
@@ -28,7 +31,7 @@ public class MainGame
 
     public enum Layer
     {
-        bg, monster, block, player, bullet, ui, COUNT
+        bg, monster, block, player, bullet, system, COUNT
     }
 
     public static MainGame getInstance()
@@ -49,40 +52,45 @@ public class MainGame
     {
         layers = new ArrayList<>();
 
-        for (int i = 0; i< count; ++i)
+        for (int i = 0; i < count; ++i)
         {
             layers.add(new ArrayList<>());
         }
     }
-    
+
     public void init()
     {
         // 레이어 리스트 추가
         initLayers(Layer.COUNT.ordinal());
 
         // 플레이어
-        doodle = new Doodle(Metrics.width/2, Metrics.height/2);
+        doodle = new Doodle(Metrics.width / 2, Metrics.height / 2);
         add(Layer.player, doodle);
-        
+
         // 배경 추가
         bg = new Background(R.mipmap.background);
         add(Layer.bg, bg);
 
+        // 블록 생성기
+        blockGenerator = new BlockGenerator();
+        add(Layer.system, blockGenerator);
+
+        score = 0;
+
         ///////////////////////// 테스트용 블록들 /////////////////////////////
-        Block block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2, Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
-        add(Layer.block, block);
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
-        add(Layer.block, block);
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 - Metrics.size(R.dimen.block_width) - Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
-        add(Layer.block, block);
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
-        add(Layer.block, block);
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2+ Metrics.size(R.dimen.block_width) + Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        Block block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2, Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
         add(Layer.block, block);
 
-        block = new Block((int)(Math.random() % Block.Type.COUNT.ordinal()), Metrics.width / 2 + 400, Metrics.height/2+400, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 - Metrics.size(R.dimen.block_width) - Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset) - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
         add(Layer.block, block);
-
+        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 - Metrics.size(R.dimen.block_width), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 3), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2, Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 4), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 + Metrics.size(R.dimen.block_width), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 5), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
+        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 + (Metrics.size(R.dimen.block_width) * 2), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 6), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        add(Layer.block, block);
     }
 
     public void update(int elapsed)
@@ -99,7 +107,7 @@ public class MainGame
 
     public void draw(Canvas canvas)
     {
-        for (ArrayList<GameObject> objects: layers)
+        for (ArrayList<GameObject> objects : layers)
         {
             for (GameObject gobj : objects)
             {
@@ -157,5 +165,8 @@ public class MainGame
         return layers.get(Layer.block.ordinal()).size();
     }
 
-    public float getScrollVal() { return bg.getScrollVal(); }
+    public float getScrollVal()
+    {
+        return bg.getScrollVal();
+    }
 }

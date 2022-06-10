@@ -18,8 +18,8 @@ public class Block extends Sprite
 
     public enum Type
     {
-        normal(R.mipmap.block_green), fake(R.mipmap.block_green), vertical(R.mipmap.block_green),
-        horizon(R.mipmap.block_green), singleUse(R.mipmap.block_green), COUNT(0);
+        normal(R.mipmap.block_green), fake(R.mipmap.block_green), vertical(R.mipmap.block_blue),
+        horizon(R.mipmap.block_bluegray), singleUse(R.mipmap.block_white), COUNT(0);
 
         private final int image;
         Type(int value)

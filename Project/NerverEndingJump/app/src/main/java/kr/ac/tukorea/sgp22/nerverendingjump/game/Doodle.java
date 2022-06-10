@@ -27,7 +27,7 @@ public class Doodle extends Sprite
     private float dx, dy = 0;
     private final float jumpSpeed = 2500;
     private final float gravity = 80;
-    private final float sitTime = 0.2f;
+    private final float sitTime = 0.3f;
 
     private SensorManager sensorManager;
     private SensorEventListener sensorEventListener;
@@ -113,9 +113,10 @@ public class Doodle extends Sprite
     @Override
     public RectF getRect()
     {
-        int size = (int)Metrics.size(R.dimen.doodle_height) / 2;
+        int sizeH = (int)Metrics.size(R.dimen.doodle_height) / 2;
+        int sizeW = (int)Metrics.size(R.dimen.doodle_width) / 3;
         RectF tmp = new RectF();
-        tmp.set(dstRect.left, dstRect.bottom - size, dstRect.right, dstRect.bottom);
+        tmp.set(dstRect.left + sizeW, dstRect.bottom - sizeH, dstRect.right - sizeW, dstRect.bottom);
         return tmp;
     }
 
