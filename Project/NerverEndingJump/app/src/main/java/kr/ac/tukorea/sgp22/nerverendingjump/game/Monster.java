@@ -80,21 +80,20 @@ public class Monster extends Sprite
     @Override
     public void update()
     {
-        float dy = 0;
-        dy = game.getScrollVal();
-        y += dy;
-        dstRect.offset(0, dy);
+        float t_dy = 0;
+        t_dy = game.getScrollVal();
+        this.y += t_dy;
+        dstRect.offset(0, t_dy);
 
         if (CollisionHelper.CollisionCheck(this, doodle))
         {
             GameView.view.endGame();
             GameView.view.changeScene(GameView.Scene.score);
-            return;
         }
 
         else if (y > Metrics.height)
         {
-            game.remove(MainGame.Layer.block, this);
+            game.remove(MainGame.Layer.monster, this);
         }
     }
 
