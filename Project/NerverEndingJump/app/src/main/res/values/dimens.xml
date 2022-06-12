@@ -10,4 +10,12 @@
     <dimen name="btn_play_y">200dp</dimen>
     <dimen name="btn_play_w">150dp</dimen>
     <dimen name="btn_play_h">50dp</dimen>
+    <dimen name="btn_pause_w">70dp</dimen>
+    <dimen name="btn_pause_h">70dp</dimen>
+    <dimen name="bullet_w">15dp</dimen>
+    <dimen name="bullet_h">15dp</dimen>
+    <dimen name="hole_w">100dp</dimen>
+    <dimen name="hole_h">100dp</dimen>
+    <dimen name="monster_w_1">70dp</dimen>
+    <dimen name="monster_h_1">120dp</dimen>
 </resources>

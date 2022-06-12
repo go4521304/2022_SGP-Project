@@ -13,18 +13,15 @@ import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
 public class BlockGenerator extends GameObject
 {
     private static final String TAG = BlockGenerator.class.getSimpleName();
-    private static MainGame game = null;
+    private static MainGame game;
 
     private static final Random random = new Random();
-
-    private float timegap = 0;
 
     private int makeCount;
 
     public BlockGenerator()
     {
-        if (game == null)
-            game = MainGame.getInstance();
+        game = MainGame.getInstance();
 
         random.setSeed(System.currentTimeMillis());
 
@@ -38,7 +35,7 @@ public class BlockGenerator extends GameObject
 
             y -= Metrics.height / 2;
 
-            block = new Block((int) (Math.random() % Block.Type.COUNT.ordinal()), x, y, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+            block = Block.get(Block.Type.normal.ordinal(), x, y);
             game.add(MainGame.Layer.block, block);
         }
     }
@@ -59,30 +56,26 @@ public class BlockGenerator extends GameObject
         {
             makeCount = 24 - game.blockCount();
         }
-        else if (game.score > 100000 && game.score < 200000)
+        else if (game.score > 100000 && game.score < 500000)
         {
-            makeCount = 20 - game.blockCount();
+            makeCount = 22 - game.blockCount();
         }
         else
         {
             makeCount = 20 - game.blockCount();
         }
 
-        if (makeCount > 0)
-            Log.d(TAG, "update: " + makeCount);
-
         Block block;
 
         for (int i = 0; i < makeCount; ++i)
         {
             float x = random.nextInt(Metrics.width);
-            float y = random.nextInt(Metrics.height / 2);
+            float y = random.nextInt(Metrics.height);
 
-            y -= Metrics.height /2;
+            y -= Metrics.height;
 
-            block = new Block((int) (Math.random() % Block.Type.COUNT.ordinal()), x, y, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+            block = Block.get(random.nextInt(Block.Type.COUNT.ordinal()), x, y);
             game.add(MainGame.Layer.block, block);
-
         }
     }
 

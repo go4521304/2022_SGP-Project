@@ -17,6 +17,21 @@ public class Sprite extends GameObject
         bitmap = BitmapPool.get(bitmapResId);
     }
 
+    public Sprite(float x, float y, int bitmapResId) {
+        this.x = x;
+        this.y = y;
+        bitmap = BitmapPool.get(bitmapResId);
+
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
+        float scaling = (float)h / (float)w;
+        w = Metrics.width;
+        h = (int)(w * scaling);
+
+        dstRect.set(x - w / 2, y - h / 2, x + w / 2, y + h / 2);
+    }
+
     @Override
     public void update()
     {

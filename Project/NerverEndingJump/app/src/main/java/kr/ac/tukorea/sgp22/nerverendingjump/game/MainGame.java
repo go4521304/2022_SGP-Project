@@ -1,15 +1,20 @@
 package kr.ac.tukorea.sgp22.nerverendingjump.game;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
 import kr.ac.tukorea.sgp22.nerverendingjump.R;
+import kr.ac.tukorea.sgp22.nerverendingjump.framework.CollisionHelper;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameObject;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameView;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
+import kr.ac.tukorea.sgp22.nerverendingjump.framework.Recycle;
+import kr.ac.tukorea.sgp22.nerverendingjump.framework.Sprite;
 
 public class MainGame
 {
@@ -19,10 +24,15 @@ public class MainGame
 
     public float score;
 
-    private ArrayList<ArrayList<GameObject>> layers;
+    private ArrayList<ArrayList<GameObject>> layers = null;
     private Doodle doodle;
     private Background bg;
     private BlockGenerator blockGenerator;
+    private MonsterGenerator monsterGenerator;
+    private Sprite btn_pause;
+
+    private Paint scorePaint = new Paint();
+
 
     public Doodle getDoodle()
     {
@@ -64,7 +74,8 @@ public class MainGame
         initLayers(Layer.COUNT.ordinal());
 
         // 플레이어
-        doodle = new Doodle(Metrics.width / 2, Metrics.height / 2);
+        doodle = Doodle.getInstance();
+        doodle.init(Metrics.width / 2, Metrics.height / 2);
         add(Layer.player, doodle);
 
         // 배경 추가
@@ -75,21 +86,32 @@ public class MainGame
         blockGenerator = new BlockGenerator();
         add(Layer.system, blockGenerator);
 
+        // 몬스터 생성기
+        monsterGenerator = new MonsterGenerator();
+        add(Layer.system, monsterGenerator);
+
+        // 정지버튼
+        btn_pause = new Sprite(Metrics.width - (Metrics.size(R.dimen.btn_pause_w) / 2), Metrics.size(R.dimen.btn_pause_h) / 2, Metrics.size(R.dimen.btn_pause_w), Metrics.size(R.dimen.btn_pause_h), R.mipmap.btn_pause);
+        add(Layer.system, btn_pause);
+
+        // 스코어
         score = 0;
+        scorePaint.setColor(Color.BLACK);
+        scorePaint.setTextSize(80);
 
-        ///////////////////////// 테스트용 블록들 /////////////////////////////
-        Block block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2, Metrics.height - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        ///////////////////////// 초기 블록들 /////////////////////////////
+        Block block = Block.get(Block.Type.normal.ordinal(), Metrics.width / 2, Metrics.height - Metrics.size(R.dimen.block_y_offset));
         add(Layer.block, block);
 
-        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 - Metrics.size(R.dimen.block_width) - Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset) - Metrics.size(R.dimen.block_y_offset), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        block = Block.get(Block.Type.normal.ordinal(), Metrics.width / 2 - Metrics.size(R.dimen.block_width) - Metrics.size(R.dimen.block_width), Metrics.height - Metrics.size(R.dimen.block_y_offset) - Metrics.size(R.dimen.block_y_offset));
         add(Layer.block, block);
-        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 - Metrics.size(R.dimen.block_width), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 3), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        block = Block.get(Block.Type.normal.ordinal(), Metrics.width / 2 - Metrics.size(R.dimen.block_width), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 3));
         add(Layer.block, block);
-        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2, Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 4), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        block = Block.get(Block.Type.normal.ordinal(), Metrics.width / 2, Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 4));
         add(Layer.block, block);
-        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 + Metrics.size(R.dimen.block_width), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 5), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        block = Block.get(Block.Type.normal.ordinal(), Metrics.width / 2 + Metrics.size(R.dimen.block_width), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 5));
         add(Layer.block, block);
-        block = new Block(Block.Type.normal.ordinal(), Metrics.width / 2 + (Metrics.size(R.dimen.block_width) * 2), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 6), Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
+        block = Block.get(Block.Type.normal.ordinal(), Metrics.width / 2 + (Metrics.size(R.dimen.block_width) * 2), Metrics.height - (Metrics.size(R.dimen.block_y_offset) * 6));
         add(Layer.block, block);
     }
 
@@ -114,6 +136,7 @@ public class MainGame
                 gobj.draw(canvas);
             }
         }
+        canvas.drawText(String.valueOf((int) score), Metrics.width/2 - 50, 80, scorePaint);
     }
 
     public boolean onTouchEvent(MotionEvent event)
@@ -124,11 +147,15 @@ public class MainGame
             case MotionEvent.ACTION_DOWN:
                 int x = (int) event.getX();
                 int y = (int) event.getY();
-                doodle.setDirection(x, y);
-                return true;
-
-            case MotionEvent.ACTION_UP:
-                doodle.stopMove();
+                if (CollisionHelper.PointCheck(btn_pause, x, y))
+                {
+                    GameView.view.changeScene(GameView.Scene.pause);
+                }
+                else
+                {
+                    doodle.shoot();
+                    add(Layer.bullet, Bullet.get(doodle.getX(), doodle.getY()));
+                }
                 return true;
         }
 
@@ -156,6 +183,7 @@ public class MainGame
             public void run()
             {
                 layers.get(layer.ordinal()).remove(object);
+                Recycle.add(object);
             }
         });
     }
@@ -163,6 +191,11 @@ public class MainGame
     public int blockCount()
     {
         return layers.get(Layer.block.ordinal()).size();
+    }
+
+    public ArrayList<GameObject> getGameObject(Layer layer)
+    {
+        return layers.get(layer.ordinal());
     }
 
     public float getScrollVal()

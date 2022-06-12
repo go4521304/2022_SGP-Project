@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 
 import kr.ac.tukorea.sgp22.nerverendingjump.game.LobbyUI;
 import kr.ac.tukorea.sgp22.nerverendingjump.game.MainGame;
+import kr.ac.tukorea.sgp22.nerverendingjump.game.PauseUI;
+import kr.ac.tukorea.sgp22.nerverendingjump.game.ScoreUI;
 
 public class GameView extends View implements Choreographer.FrameCallback
 {
@@ -22,6 +24,8 @@ public class GameView extends View implements Choreographer.FrameCallback
     public static GameView view;
     private static MainGame game;
     private static LobbyUI lobby;
+    private static ScoreUI scoreBoard;
+    private static PauseUI pause;
 
     private boolean initialized;
     private boolean running;
@@ -29,7 +33,6 @@ public class GameView extends View implements Choreographer.FrameCallback
     private long prevTime;
     private int FPS;
     private Paint fpsPaint = new Paint();
-    private Paint objcnt = new Paint();
 
     public enum Scene {lobby, ingame, pause, score};
     private Scene scene;
@@ -69,11 +72,16 @@ public class GameView extends View implements Choreographer.FrameCallback
         game = MainGame.getInstance();
         game.init();
 
+        // scorebaord
+        scoreBoard = ScoreUI.getInstance();
+        scoreBoard.init();
+
+        // pause
+        pause = PauseUI.getInstance();
+        pause.init();
+
         fpsPaint.setColor(Color.BLUE);
         fpsPaint.setTextSize(80);
-
-        objcnt.setColor(Color.BLACK);
-        objcnt.setTextSize(80);
 
         Choreographer.getInstance().postFrameCallback(this);
     }
@@ -110,11 +118,13 @@ public class GameView extends View implements Choreographer.FrameCallback
 
                 case pause:
                 {
+                    pause.update(elapsed);
                     break;
                 }
 
                 case score:
                 {
+                    scoreBoard.update(elapsed);
                     break;
                 }
 
@@ -146,11 +156,13 @@ public class GameView extends View implements Choreographer.FrameCallback
 
             case pause:
             {
+                pause.draw(canvas);
                 break;
             }
 
             case score:
             {
+                scoreBoard.draw(canvas);
                 break;
             }
 
@@ -158,7 +170,6 @@ public class GameView extends View implements Choreographer.FrameCallback
                 break;
         }
         canvas.drawText(String.valueOf(FPS), 20, 80, fpsPaint);
-        canvas.drawText(String.valueOf(game.blockCount()), Metrics.width/2, 80, objcnt);
     }
 
     @Override
@@ -178,35 +189,44 @@ public class GameView extends View implements Choreographer.FrameCallback
 
             case pause:
             {
-                break;
+                return pause.onTouchEvent(event);
             }
 
             case score:
             {
-                break;
+                return scoreBoard.onTouchEvent(event);
             }
 
             default:
                 return false;
         }
-        return false;
     }
 
     public void pauseGame()
     {
         running = false;
 
-        game.getDoodle().unregisterListener();
+        if (scene == Scene.ingame)
+        {
+            game.getDoodle().unregisterListener();
+            changeScene(Scene.pause);
+        }
     }
 
     public void resumeGame()
     {
-        if (initialized && !running)
+        if (initialized && !running &&  scene == Scene.ingame)
         {
             running = true;
             Choreographer.getInstance().postFrameCallback(this);
             game.getDoodle().registerListener();
         }
+    }
+
+    public void endGame()
+    {
+        scoreBoard.scoreUpdate((int) game.score);
+        game.init();
     }
 
     public void changeScene(Scene newScene)

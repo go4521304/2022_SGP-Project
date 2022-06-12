@@ -6,12 +6,11 @@ import android.graphics.RectF;
 import android.util.Log;
 
 
-import kr.ac.tukorea.sgp22.nerverendingjump.app.MainActivity;
+import kr.ac.tukorea.sgp22.nerverendingjump.framework.BitmapPool;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameView;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Metrics;
 import kr.ac.tukorea.sgp22.nerverendingjump.R;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.Sprite;
-import kr.ac.tukorea.sgp22.nerverendingjump.framework.BitmapPool;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -22,12 +21,14 @@ public class Doodle extends Sprite
 {
     private static final String TAG = Doodle.class.getSimpleName();
 
-    private static final MainGame game = MainGame.getInstance();
+    private static Doodle singleton;
 
-    private float dx, dy = 0;
-    private final float jumpSpeed = 2500;
-    private final float gravity = 80;
-    private final float sitTime = 0.3f;
+    private static MainGame game;
+
+    private float dx, dy;
+    private static final float jumpSpeed = 2500;
+    private static final float gravity = 80;
+    private static final float sitTime = 0.3f, shootTime = 0.3f;
 
     private SensorManager sensorManager;
     private SensorEventListener sensorEventListener;
@@ -38,7 +39,8 @@ public class Doodle extends Sprite
     private enum State
     {
         left(R.mipmap.lik_left), left_sit(R.mipmap.lik_left_sit),
-        right(R.mipmap.lik_right), right_sit(R.mipmap.lik_right_sit);
+        right(R.mipmap.lik_right), right_sit(R.mipmap.lik_right_sit),
+        shoot(R.mipmap.lik_shoot), shoot_sit(R.mipmap.lik_shoot_sit);
 
         private final int image;
         State(int value)
@@ -55,21 +57,48 @@ public class Doodle extends Sprite
     private State state;
 
     private boolean falling;
-    private float sitTimer;
+    private float sitTimer, shootTimer;
 
-    public Doodle(float x, float y)
+    public Doodle()
     {
-        super(x, y, Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_width), R.mipmap.lik_left);
+        super(0, 0, Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_width), R.mipmap.lik_left);
+
+        game = MainGame.getInstance();
 
         sensorManager = (SensorManager) GameView.view.getContext().getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
         sensorEventListener = new UserSensorListner();
 
+        registerListener();
+    }
+
+    public static Doodle getInstance()
+    {
+        if (singleton == null)
+        {
+            singleton = new Doodle();
+        }
+        return singleton;
+    }
+
+    public static void clear()
+    {
+        singleton = null;
+    }
+
+    public void init(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+        setDstRect(Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_width));
+        this.bitmap = BitmapPool.get(R.mipmap.lik_left);
+
+        dx = 0;
+        dy = 0;
+
         state = State.left;
         sitTimer = 0.0f;
         falling = true;
-
-        registerListener();
     }
 
     public class UserSensorListner implements SensorEventListener
@@ -102,7 +131,7 @@ public class Doodle extends Sprite
 
     public void registerListener()
     {
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void unregisterListener()
@@ -165,21 +194,45 @@ public class Doodle extends Sprite
         y += t_dy + game.getScrollVal();
         dstRect.offset(0, t_dy + game.getScrollVal());
 
+        // 게임 오버
+        if (y > Metrics.height)
+        {
+            GameView.view.endGame();
+            GameView.view.changeScene(GameView.Scene.score);
+            return;
+        }
+
         // 스프라이트 선택 부분
         if (sitTimer <= 0.f)
         {
-            changeSprite(this.state.getImageID());
+            if (shootTimer <= 0.0f)
+            {
+                changeSprite(this.state.getImageID());
+            }
+            else
+            {
+                changeSprite(State.shoot.getImageID());
+                shootTimer -= frameTime;
+            }
         }
 
         else    // 앉아있는 스프라이트
         {
-            if (this.state == State.left)
+            if (shootTimer <= 0.0f)
             {
-                changeSprite(State.left_sit.getImageID());
+                if (this.state == State.left)
+                {
+                    changeSprite(State.left_sit.getImageID());
+                }
+                else
+                {
+                    changeSprite(State.right_sit.getImageID());
+                }
             }
             else
             {
-                changeSprite(State.right_sit.getImageID());
+                changeSprite(State.shoot_sit.getImageID());
+                shootTimer -= frameTime;
             }
 
             sitTimer -= frameTime;
@@ -200,6 +253,11 @@ public class Doodle extends Sprite
             }
             setDstRect(Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_height));
         }
+    }
+
+    public void shoot()
+    {
+        shootTimer = shootTime;
     }
 
     public void draw(Canvas canvas)

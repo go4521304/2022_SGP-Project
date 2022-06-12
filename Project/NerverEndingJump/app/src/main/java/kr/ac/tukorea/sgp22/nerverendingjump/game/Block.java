@@ -18,7 +18,7 @@ public class Block extends Sprite
 
     public enum Type
     {
-        normal(R.mipmap.block_green), fake(R.mipmap.block_green), vertical(R.mipmap.block_blue),
+        normal(R.mipmap.block_green), vertical(R.mipmap.block_blue),
         horizon(R.mipmap.block_bluegray), singleUse(R.mipmap.block_white), COUNT(0);
 
         private final int image;
@@ -38,38 +38,48 @@ public class Block extends Sprite
 
     private Type blockType;
 
-    public Block(int type, float x, float y, float width, float height)
+    private float[] bound = new float[2];
+    private final float speed = 300;
+
+    private int dir = -1;
+
+    public Block()
     {
-        super(x, y, width, height, R.mipmap.block_green);
+        super(0, 0, Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height), R.mipmap.block_green);
 
-        if (game == null)
-            game = MainGame.getInstance();
-        if (player == null)
-            player = game.getDoodle();
-
-        this.blockType = Type.values()[type];
-        changeSprite(blockType.getImageID());
-
+        game = MainGame.getInstance();
+        player = game.getDoodle();
     }
 
-    public static Block get(int type, float x, float y, float width, float height)
+    public static Block get(int type, float x, float y)
     {
         Block block = (Block) Recycle.get(Block.class);
-        if (block != null)
+        if (block == null)
         {
-            block.set(type, x, y, width, height);
-            return block;
+            block = new Block();
         }
-        return new Block(type, x, y, width, height);
+        block.set(type, x, y);
+        return block;
     }
 
-    private void set(int type, float x, float y, float width, float height)
+    private void set(int type, float x, float y)
     {
         this.blockType = Type.values()[type];
         this.x = x;
         this.y = y;
-        this.setDstRect(width, height);
+        this.setDstRect(Metrics.size(R.dimen.block_width), Metrics.size(R.dimen.block_height));
         changeSprite(blockType.getImageID());
+
+        if (type == Type.vertical.ordinal())
+        {
+            bound[0] = y - (float)(Metrics.size(R.dimen.block_width) * 1.5);
+            bound[1] = y + (float)(Metrics.size(R.dimen.block_width) * 1.5);
+        }
+        else if (type == Type.horizon.ordinal())
+        {
+            bound[0] = x - (float)(Metrics.size(R.dimen.block_width) * 1.5);
+            bound[1] = x + (float)(Metrics.size(R.dimen.block_width) * 1.5);
+        }
     }
 
     @Override
@@ -78,12 +88,54 @@ public class Block extends Sprite
         if (player.isFalling() && CollisionHelper.CollisionCheck(player, this))
         {
             player.jumping();
+
+            if (this.blockType == Type.singleUse)
+            {
+                game.remove(MainGame.Layer.block, this);
+            }
         }
 
-        y += game.getScrollVal();
-        dstRect.offset(0, game.getScrollVal());
+        float dx = 0, dy = 0;
 
-        if (y > Metrics.height)
+        if (blockType == Type.vertical)
+        {
+            float t_dy = dir * speed * game.frameTime;
+            dy += t_dy;
+            bound[0] += game.getScrollVal();
+            bound[1] += game.getScrollVal();
+        }
+        else if (blockType == Type.horizon)
+        {
+            float t_dx = dir * speed * game.frameTime;
+            dx += t_dx;
+        }
+
+        x += dx;
+
+        dy += game.getScrollVal();
+        y += dy;
+
+        dstRect.offset(dx, dy);
+
+        if (blockType == Type.horizon && (x < 0 || x > Metrics.width || x < bound[0] || x> bound[1]))
+        {
+            dir *= -1;
+        }
+
+        // 삭제 할지 검사
+        if (blockType == Type.vertical)
+        {
+            if (bound[0] > Metrics.height)
+            {
+                game.remove(MainGame.Layer.block, this);
+            }
+            else if (y < bound[0] || y > bound[1])
+            {
+                dir *= -1;
+            }
+        }
+
+        else if (y > Metrics.height)
         {
             game.remove(MainGame.Layer.block, this);
         }

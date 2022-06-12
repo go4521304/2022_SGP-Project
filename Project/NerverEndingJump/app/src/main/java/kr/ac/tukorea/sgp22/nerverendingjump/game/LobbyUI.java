@@ -28,25 +28,30 @@ public class LobbyUI
         singleton = null;
     }
 
-    private Sprite bg, btn_play;
-    private boolean isPressPlay;
+    private Sprite btn_play, btn_score;
+    private Background bg;
+    private boolean isPressPlay, isPressScore;
 
     public void init()
     {
-        bg = new Sprite(Metrics.width/2, Metrics.height/2, Metrics.width, Metrics.height, R.mipmap.background);
+        bg = new Background(R.mipmap.background);
         btn_play = new Sprite(Metrics.width/2, Metrics.height  - Metrics.size(R.dimen.btn_play_y), Metrics.size(R.dimen.btn_play_w), Metrics.size(R.dimen.btn_play_h), R.mipmap.btn_play);
         isPressPlay = false;
+
+        btn_score = new Sprite(Metrics.width/2, Metrics.height  - (Metrics.size(R.dimen.btn_play_y) / 2), Metrics.size(R.dimen.btn_play_w), Metrics.size(R.dimen.btn_play_h), R.mipmap.btn_scores);
+        isPressScore = false;
     }
 
     public void update(int elapsed)
     {
-
     }
 
     public void draw(Canvas canvas)
     {
         bg.draw(canvas);
         btn_play.draw(canvas);
+
+        btn_score.draw(canvas);
     }
 
     public boolean onTouchEvent(MotionEvent event)
@@ -63,6 +68,12 @@ public class LobbyUI
                     btn_play.changeSprite(R.mipmap.btn_play_press);
                     isPressPlay = true;
                 }
+
+                else if (CollisionHelper.PointCheck(btn_score, x, y))
+                {
+                    btn_score.changeSprite(R.mipmap.btn_scores_on);
+                    isPressScore = true;
+                }
                 return true;
 
             case MotionEvent.ACTION_UP:
@@ -71,6 +82,13 @@ public class LobbyUI
                     btn_play.changeSprite(R.mipmap.btn_play);
                     isPressPlay = false;
                     GameView.view.changeScene(GameView.Scene.ingame);
+                }
+
+                else if (isPressScore)
+                {
+                    btn_score.changeSprite(R.mipmap.btn_scores);
+                    isPressScore = false;
+                    GameView.view.changeScene(GameView.Scene.score);
                 }
                 return true;
         }

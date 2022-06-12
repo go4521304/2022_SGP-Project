@@ -2,17 +2,11 @@ package kr.ac.tukorea.sgp22.nerverendingjump.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.WindowManager;
 
 import kr.ac.tukorea.sgp22.nerverendingjump.R;
 import kr.ac.tukorea.sgp22.nerverendingjump.framework.GameView;
-import kr.ac.tukorea.sgp22.nerverendingjump.game.Doodle;
 import kr.ac.tukorea.sgp22.nerverendingjump.game.MainGame;
 
 public class MainActivity extends AppCompatActivity
@@ -22,6 +16,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
