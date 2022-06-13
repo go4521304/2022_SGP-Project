@@ -86,7 +86,6 @@ public class PauseUI
                 {
                     btn_menu.changeSprite(R.mipmap.btn_menu);
                     isPressMenu = false;
-                    MainGame.getInstance().init();
                     GameView.view.changeScene(GameView.Scene.lobby);
                 }
 

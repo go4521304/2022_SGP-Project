@@ -93,12 +93,12 @@ public class Doodle extends Sprite
         setDstRect(Metrics.size(R.dimen.doodle_width), Metrics.size(R.dimen.doodle_width));
         this.bitmap = BitmapPool.get(R.mipmap.lik_left);
 
-        dx = 0;
-        dy = 0;
+        this.dx = 0;
+        this.dy = 0;
 
-        state = State.left;
-        sitTimer = 0.0f;
-        falling = true;
+        this.state = State.left;
+        this.sitTimer = 0.0f;
+        this.falling = true;
     }
 
     public class UserSensorListner implements SensorEventListener

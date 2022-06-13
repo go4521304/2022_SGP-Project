@@ -205,21 +205,22 @@ public class GameView extends View implements Choreographer.FrameCallback
     public void pauseGame()
     {
         running = false;
+        game.getDoodle().unregisterListener();
 
         if (scene == Scene.ingame)
         {
-            game.getDoodle().unregisterListener();
             changeScene(Scene.pause);
         }
     }
 
     public void resumeGame()
     {
-        if (initialized && !running &&  scene == Scene.ingame)
+        if (initialized && !running)
         {
             running = true;
-            Choreographer.getInstance().postFrameCallback(this);
             game.getDoodle().registerListener();
+
+            Choreographer.getInstance().postFrameCallback(this);
         }
     }
 
@@ -231,6 +232,11 @@ public class GameView extends View implements Choreographer.FrameCallback
 
     public void changeScene(Scene newScene)
     {
+        if (newScene == Scene.lobby)
+        {
+            game.init();
+        }
+
         scene = newScene;
     }
 }

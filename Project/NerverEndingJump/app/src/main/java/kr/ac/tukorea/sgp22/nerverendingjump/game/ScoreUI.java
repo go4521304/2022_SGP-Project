@@ -135,9 +135,12 @@ public class ScoreUI
                 return true;
 
             case MotionEvent.ACTION_UP:
-                btn_done.changeSprite(R.mipmap.btn_done);
-                isPressDone = false;
-                GameView.view.changeScene(GameView.Scene.lobby);
+                if (isPressDone)
+                {
+                    btn_done.changeSprite(R.mipmap.btn_done);
+                    isPressDone = false;
+                    GameView.view.changeScene(GameView.Scene.lobby);
+                }
                 return true;
         }
 
