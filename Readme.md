@@ -67,4 +67,4 @@
     - 자이로는 디버깅시에 어려울 수 있음.
 
 - 2차 발표 : https://youtu.be/YB0Hi1MlMjA
-- 최종 발표: 
+- 최종 발표: https://youtu.be/domd4ZSDnmw
