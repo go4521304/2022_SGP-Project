@@ -68,3 +68,4 @@
 
 - 2차 발표 : https://youtu.be/YB0Hi1MlMjA
 - 최종 발표: https://youtu.be/domd4ZSDnmw
+- 플레이 영상: https://youtu.be/oP0wlPCXqWc
